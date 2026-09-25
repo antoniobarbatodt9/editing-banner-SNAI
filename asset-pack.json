@@ -74,6 +74,17 @@
    "frames": 150,
    "duration_s": 10.0,
    "note": "errore nel master: card NetBet al f92"
+  },
+  {
+   "file": "00_master_approvato/SNAI_BonusSport_728x90_MASTER.mp4",
+   "sha256": "ab0be1236ecabfaf41436dd27512287eef9fe7ad50c787093d2b03b80e4efd55",
+   "size": [
+    728,
+    90
+   ],
+   "fps": 15,
+   "frames": 150,
+   "duration_s": 10.0
   }
  ],
  "outputs": {
@@ -114,8 +125,15 @@
    "master_lossless": "09_rebuild_master/SNAI_BonusSport_320x320_CORRETTO_master_lossless_rgb.mkv",
    "distribuzione": "11_distribuzione/SNAI_BonusSport_320x320_CORRETTO.mp4",
    "sha256_distribuzione": "2ac4a1720e8df49bb44d9ea3ebc88323ec44ce039fdf28ef0514586ceb986dcb",
-   "stato": "in attesa di approvazione",
+   "stato": "approvato",
    "note": "card SNAI senza pulse (f116-120, f124-127 interpolati); f92 card NetBet rimossa (pixel reali f93); CTA pulse invariato"
+  },
+  "728x90": {
+   "master_lossless": "09_rebuild_master/SNAI_BonusSport_728x90_CORRETTO_master_lossless_rgb.mkv",
+   "distribuzione": "11_distribuzione/SNAI_BonusSport_728x90_CORRETTO.mp4",
+   "sha256_distribuzione": "4c5ecf497de59fe63d8c198aa5e85125cbdd41b3d7666881216289b03c8ecd66",
+   "stato": "in attesa di approvazione",
+   "note": "layout orizzontale; card opache; FINO A lettera per lettera conservato; card SNAI senza pulse (f120-122, f125-127 interpolati)"
   }
  },
  "assets": [

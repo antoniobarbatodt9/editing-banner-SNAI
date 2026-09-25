@@ -34,7 +34,13 @@ EXIT_ALPHA = getattr(_cfg, 'EXIT_ALPHA', {})
 PULSE_FLOW = getattr(_cfg, 'PULSE_FLOW', {})      # {frame: (frame_reale_prima, frame_reale_dopo)} -> interpolazione con flusso ottico
 UNMIX = getattr(_cfg, 'UNMIX', {})
 PULSE_KEEP = getattr(_cfg, 'PULSE_KEEP', [])
-CUT_DENOISE = getattr(_cfg, 'CUT_DENOISE', False)  # pulizia dei ritagli del conteggio nei frame in dissolvenza      # rettangoli che restano pixel reali dentro la fascia interpolata
+CUT_DENOISE = getattr(_cfg, 'CUT_DENOISE', False)
+PULSE_BRIGHT_GUARD = getattr(_cfg, 'PULSE_BRIGHT_GUARD', False)
+PULSE_FLOW_ROWS = getattr(_cfg, 'PULSE_FLOW_ROWS', None)
+LAYOUT_H = getattr(_cfg, 'LAYOUT_H', None)        # formati orizzontali: logo | FINO A sopra | importo, in riga
+FINO_REVEAL = getattr(_cfg, 'FINO_REVEAL', {})
+CUT_XMIN = getattr(_cfg, 'CUT_XMIN', {})          # x minima dell'importo nel frame originale (orizzontali)    # {frame: {card: frazione}}: FINO A scritto lettera per lettera
+if hasattr(_cfg, 'CARD_FILL'): A.CARD_FILL = np.array(_cfg.CARD_FILL, float)  # pulizia dei ritagli del conteggio nei frame in dissolvenza      # rettangoli che restano pixel reali dentro la fascia interpolata
 COUNT = getattr(_cfg, 'COUNT', {})                # {frame: {card: frame_originale}} -> valore intermedio del conteggio                # {frame: frame_di_riposo} -> dissolvenza/glitch: opacita' stimata pixel per pixel
 
 def _asset(rgb, a):
@@ -99,6 +105,15 @@ def place(pm, al, key, asset, x, y, h, ox, oy, opacity):
 def layout(card, box, k):
     """posizioni (px frame, float) degli elementi: restituisce dict con x,y,h per logo/fino/amount."""
     x0, y0, x1, y1 = box
+    if LAYOUT_H:
+        # riga orizzontale: logo allineato a destra su logo_right, FINO A sopra la fine del logo,
+        # importo allineato a destra su amt_right, logo e importo sulla stessa linea di base
+        hl, hf, ha = H_LOGO, H_FINO, H_AMT
+        lw = _logo[card]['w'] * hl / _logo[card]['h']; aw = _amt[card]['w'] * ha / _amt[card]['h']
+        fw = _fino['w'] * hf / _fino['h']
+        lr, ar, base, ft = LAYOUT_H['logo_right'], LAYOUT_H['amt_right'], LAYOUT_H['base'], LAYOUT_H['fino_top']
+        return {'logo': (lr - lw, base - hl, hl, lw), 'fino': (lr - fw, ft, hf),
+                'amount': (ar - aw, base - ha, ha, aw)}
     cx, cy = (x0 + x1 + 1) / 2, (y0 + y1 + 1) / 2
     hl, hf, ha, g1, g2 = H_LOGO * k, H_FINO * k, H_AMT * k, G1 * k, G2 * k
     if abs(k - K2) < 1e-6:                                # fasi 1-2 a riposo: misure intere
@@ -118,9 +133,10 @@ def layout(card, box, k):
 
 SRC_DIR = None
 _cut_cache = {}
-def _amount_mask(img, box, orange):
+def _amount_mask(img, box, orange, xmin=None):
     import cv2
     x0, y0, x1, y1 = box
+    if xmin is not None: x0 = max(x0, xmin - 4)          # formati orizzontali: importo a destra del logo
     ox, oy = max(0, x0 + 4), max(0, y0 + 4)
     sub = img[oy:y1 - 3, ox:x1 - 3]
     v = sub[..., 0] if orange else sub.min(-1)            # arancio: canale R; bianco: minimo dei canali
@@ -152,9 +168,9 @@ def cut_amount(src_frame, card, ref_frame=None):
     orange = card == 'snai'
     img = load(src_frame)
     if ref_frame is None:
-        _, _, bb = _amount_mask(img, TL[src_frame][card]['box'], orange)
+        _, _, bb = _amount_mask(img, TL[src_frame][card]['box'], orange, CUT_XMIN.get(card))
     else:
-        _, _, bb = _amount_mask(load(ref_frame), TL[ref_frame][card]['box'], orange)
+        _, _, bb = _amount_mask(load(ref_frame), TL[ref_frame][card]['box'], orange, CUT_XMIN.get(card))
         bb = (bb[0] - 6, bb[1] - 1, bb[2] + 6, bb[3] + 1)
     x0, y0, x1, y1 = bb
     sub = img[y0:y1 + 1, x0:x1 + 1]
@@ -187,11 +203,20 @@ def render_card(card, spec, frame=None):
     L = layout(card, box, k)
     ox, oy = region[0], region[1]
     x, y, h, _ = L['logo']; place(pm, al, ('logo', card), _logo[card], x, y, h, ox, oy, ca)
-    x, y, h = L['fino']; place(pm, al, ('fino',), _fino, x, y, h, ox, oy, ca)
+    x, y, h = L['fino']
+    fr = FINO_REVEAL.get(frame, {}).get(card, 1.0)
+    if fr > 0:
+        fa = _fino
+        if fr < 1:     # scrittura progressiva: visibile solo la parte sinistra dell'inchiostro
+            a2 = _fino['a'].copy(); cut = int(round(_fino['left'] + _fino['w'] * fr)); a2[:, cut:] = 0
+            fa = dict(_fino, a=a2)
+        place(pm, al, ('fino', round(fr, 3)), fa, x, y, h, ox, oy, ca)
     x, y, h, aw = L['amount']
     if frame in COUNT and card in COUNT[frame]:
         # valore intermedio: stessa altezza e stesso centro del valore finale, "FINO A" fermo
         src = COUNT[frame][card]; ref = None
+        if src is None:                       # valore illeggibile anche nell'originale: nessun importo
+            return region_finish(pm, al, region, L)
         if isinstance(src, tuple): src, ref = src
         ast = cut_amount(src, card, ref)
         w2 = ast['w'] * h / ast['h']
@@ -199,6 +224,10 @@ def render_card(card, spec, frame=None):
         L = dict(L); L['amount'] = (x + aw / 2 - w2 / 2, y, h, w2)
     else:
         place(pm, al, ('amt', card), _amt[card], x, y, h, ox, oy, ca)
+    return region_finish(pm, al, region, L)
+
+
+def region_finish(pm, al, region, L):
     Hh, Ww = al.shape
     pm_d = pm.reshape(Hh // S, S, Ww // S, S, 3).mean((1, 3))
     al_d = al.reshape(Hh // S, S, Ww // S, S).mean((1, 3))
@@ -251,12 +280,19 @@ def main(src_dir, out_dir):
             if fa == fb:                                   # copia diretta di un frame reale vicino
                 t = 0.0; I = A_.copy()
             else:
-                t = (i - fa) / (fb - fa); I = flow_interp(A_, B_, t)
+                t = (i - fa) / (fb - fa)
+                if PULSE_FLOW_ROWS:                # flusso calcolato solo nella fascia utile (es. sopra il disclaimer)
+                    r0, r1 = PULSE_FLOW_ROWS; I = A_.copy()
+                    I[r0:r1] = flow_interp(A_[r0:r1], B_[r0:r1], t)
+                else:
+                    I = flow_interp(A_, B_, t)
             lin = (1 - t) * A_ + t * B_
             # pixel arancio trascinati dal flusso (titolo/CTA) dove nessuno dei due frame reali e' arancio
             def orng(X, th=30): return (X[..., 0] > 50) & (X[..., 0] - X[..., 2] > th)
             import cv2
             bad = orng(I) & ~orng(A_, 20) & ~orng(B_, 20)
+            if PULSE_BRIGHT_GUARD:    # elementi chiari trascinati dal flusso (es. scritte del disclaimer)
+                bad |= I.mean(-1) > np.maximum(A_.mean(-1), B_.mean(-1)) + 35
             bad = cv2.dilate(bad.astype(np.uint8), np.ones((7, 7), np.uint8)).astype(bool)
             I[bad] = lin[bad]
             # fascia ricostruita con bordo sfumato (8 px) verso i pixel reali del frame
