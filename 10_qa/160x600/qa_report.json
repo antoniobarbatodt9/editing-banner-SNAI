@@ -1,0 +1,259 @@
+{
+ "psnr_dist_vs_master_db": {
+  "min": 35.54,
+  "mean": 40.21,
+  "frame_min": 103
+ },
+ "fuori_card_master_vs_originale_max_diff": 0.0,
+ "fuori_card_distribuzione_vs_originale_mean_abs": 1.684,
+ "cta_distribuzione_vs_originale_mean_abs": 2.877,
+ "misure_riposo_distribuzione": {
+  "60": {
+   "wh": {
+    "card_px": [
+     151,
+     138
+    ],
+    "logo": {
+     "h": 26,
+     "w": 127
+    },
+    "fino_a": {
+     "h": 12,
+     "w": 40
+    },
+    "importo": {
+     "h": 44,
+     "w": 113
+    }
+   }
+  },
+  "85": {
+   "wh": {
+    "card_px": [
+     151,
+     138
+    ],
+    "logo": {
+     "h": 26,
+     "w": 127
+    },
+    "fino_a": {
+     "h": 12,
+     "w": 40
+    },
+    "importo": {
+     "h": 44,
+     "w": 113
+    }
+   },
+   "bet365": {
+    "card_px": [
+     151,
+     138
+    ],
+    "logo": {
+     "h": 26,
+     "w": 111
+    },
+    "fino_a": {
+     "h": 12,
+     "w": 41
+    },
+    "importo": {
+     "h": 44,
+     "w": 117
+    }
+   }
+  },
+  "110": {
+   "bet365": {
+    "card_px": [
+     151,
+     118
+    ],
+    "logo": {
+     "h": 20,
+     "w": 85
+    },
+    "fino_a": {
+     "h": 9,
+     "w": 30
+    },
+    "importo": {
+     "h": 34,
+     "w": 91
+    }
+   },
+   "wh": {
+    "card_px": [
+     151,
+     118
+    ],
+    "logo": {
+     "h": 20,
+     "w": 97
+    },
+    "fino_a": {
+     "h": 9,
+     "w": 30
+    },
+    "importo": {
+     "h": 34,
+     "w": 87
+    }
+   },
+   "snai": {
+    "card_px": [
+     151,
+     133
+    ],
+    "logo": {
+     "h": 20,
+     "w": 89
+    },
+    "fino_a": {
+     "h": 9,
+     "w": 30
+    },
+    "importo": {
+     "h": 34,
+     "w": 135
+    }
+   }
+  }
+ },
+ "misure_riposo_master": {
+  "60": {
+   "wh": {
+    "card_px": [
+     151,
+     138
+    ],
+    "logo": {
+     "h": 26,
+     "w": 127
+    },
+    "fino_a": {
+     "h": 12,
+     "w": 40
+    },
+    "importo": {
+     "h": 44,
+     "w": 113
+    }
+   }
+  },
+  "85": {
+   "wh": {
+    "card_px": [
+     151,
+     138
+    ],
+    "logo": {
+     "h": 26,
+     "w": 127
+    },
+    "fino_a": {
+     "h": 12,
+     "w": 40
+    },
+    "importo": {
+     "h": 44,
+     "w": 113
+    }
+   },
+   "bet365": {
+    "card_px": [
+     151,
+     138
+    ],
+    "logo": {
+     "h": 26,
+     "w": 111
+    },
+    "fino_a": {
+     "h": 12,
+     "w": 41
+    },
+    "importo": {
+     "h": 44,
+     "w": 117
+    }
+   }
+  },
+  "110": {
+   "bet365": {
+    "card_px": [
+     151,
+     118
+    ],
+    "logo": {
+     "h": 20,
+     "w": 85
+    },
+    "fino_a": {
+     "h": 9,
+     "w": 30
+    },
+    "importo": {
+     "h": 34,
+     "w": 91
+    }
+   },
+   "wh": {
+    "card_px": [
+     151,
+     118
+    ],
+    "logo": {
+     "h": 20,
+     "w": 97
+    },
+    "fino_a": {
+     "h": 9,
+     "w": 30
+    },
+    "importo": {
+     "h": 34,
+     "w": 87
+    }
+   },
+   "snai": {
+    "card_px": [
+     151,
+     133
+    ],
+    "logo": {
+     "h": 20,
+     "w": 89
+    },
+    "fino_a": {
+     "h": 9,
+     "w": 30
+    },
+    "importo": {
+     "h": 34,
+     "w": 135
+    }
+   }
+  }
+ },
+ "stabilita": {
+  "snai_f102-115_master_max_diff": 0.0,
+  "snai_f102-115_dist_mean_abs": 0.025,
+  "snai_f127-135_master_max_diff": 0.0,
+  "snai_f127-135_dist_mean_abs": 0.001,
+  "bet365_f75-97_master_max_diff": 0.0,
+  "bet365_f75-97_dist_mean_abs": 0.109,
+  "bet365_f101-135_master_max_diff": 0.0,
+  "bet365_f101-135_dist_mean_abs": 0.016,
+  "wh_f54-69_master_max_diff": 0.0,
+  "wh_f54-69_dist_mean_abs": 0.088,
+  "wh_f73-97_master_max_diff": 0.0,
+  "wh_f73-97_dist_mean_abs": 0.06,
+  "wh_f100-135_master_max_diff": 0.0,
+  "wh_f100-135_dist_mean_abs": 0.036,
+  "originale_snai_f115-127_mean_abs_max": 39.987
+ }
+}

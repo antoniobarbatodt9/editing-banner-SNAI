@@ -18,12 +18,32 @@
    "file": "00_master_approvato/SUPERATO_SNAI_BonusSport_300x600_1500.mp4",
    "sha256": "b96fcfee011c4173e61c94e42e8e18bb998d2313c130b9a7f7e8f4fe33a5aa98",
    "note": "superato: importo SNAI 1.500 EUR, timing non identico"
+  },
+  {
+   "file": "00_master_approvato/SNAI_BonusSport_160x600_MASTER.mp4",
+   "sha256": "9736236742fb1b9844f55d98b1b011ae0180430de07fb0f1c4a22fba80582bb8",
+   "size": [
+    160,
+    600
+   ],
+   "fps": 15,
+   "frames": 135,
+   "duration_s": 9.0
   }
  ],
  "outputs": {
-  "master_lossless": "09_rebuild_master/SNAI_BonusSport_300x600_CORRETTO_master_lossless_rgb.mkv",
-  "distribuzione": "11_distribuzione/SNAI_BonusSport_300x600_CORRETTO.mp4",
-  "sha256_distribuzione": "393d4907d2e20bb58fcf1b46d31ede6ae39dbbcc3a381aa3a483a72c26371199"
+  "300x600": {
+   "master_lossless": "09_rebuild_master/SNAI_BonusSport_300x600_CORRETTO_master_lossless_rgb.mkv",
+   "distribuzione": "11_distribuzione/SNAI_BonusSport_300x600_CORRETTO.mp4",
+   "sha256_distribuzione": "393d4907d2e20bb58fcf1b46d31ede6ae39dbbcc3a381aa3a483a72c26371199",
+   "stato": "approvato"
+  },
+  "160x600": {
+   "master_lossless": "09_rebuild_master/SNAI_BonusSport_160x600_CORRETTO_master_lossless_rgb.mkv",
+   "distribuzione": "11_distribuzione/SNAI_BonusSport_160x600_CORRETTO.mp4",
+   "sha256_distribuzione": "cd9654cd9a705f6aa61d441ef91774e5336fa2ffd4b30fd0a1f3ed70b956b3d5",
+   "stato": "in attesa di approvazione"
+  }
  },
  "assets": [
   {
@@ -133,15 +153,16 @@
   }
  ],
  "approvals": {
-  "render_campione": "in attesa",
+  "render_campione": "300x600 approvato",
   "font_importi": "risolto: asset originali",
   "altezza_card_SNAI": "in attesa",
-  "propagazione_altri_formati": "bloccata fino ad approvazione"
+  "propagazione_altri_formati": "160x600 consegnato, in attesa di approvazione"
  },
  "notes": [
   "Nessuno sfondo generato o inventato.",
   "Vedi REPORT_300x600.md e 10_qa/qa_report.json.",
   "v2: SNAI logo -4 px, FINO A + importo +4 px.",
-  "v3: text_2000.png sostituito con la versione pulita (main bd57228)."
+  "v3: text_2000.png sostituito con la versione pulita (main bd57228).",
+  "160x600: timeline in scripts/formats/f160x600.py; FORMAT=160x600 per compose/qa/encode."
  ]
 }

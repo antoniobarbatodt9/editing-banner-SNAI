@@ -1,4 +1,5 @@
-"""Ricostruisce la timeline corretta del 300x600 SNAI Bonus Sport.
+"""Ricostruisce la timeline corretta dei formati SNAI Bonus Sport (FORMAT=300x600 | 160x600).
+   Timeline e misure di ogni formato: scripts/formats/f<FORMAT>.py
 
 Principio: lo sfondo originale non viene mai inventato ne' ricostruito.
  - Ogni card nuova copre sempre per intero la card originale dello stesso frame
@@ -19,44 +20,17 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import assets as A
 
 S = 8                     # supersampling
-RADIUS = 11.0
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# ---------------------------------------------------------------- timeline (box esterni inclusivi x0,y0,x1,y1)
-X0, X1 = 64, 237
-PH3 = {'bet365': (X0, 71, X1, 201), 'snai': (X0, 208, X1, 361), 'wh': (X0, 368, X1, 498)}
-OLD_PH3 = {'bet365': (87, 79, 213, 200), 'snai': (65, 209, 236, 360), 'wh': (86, 379, 214, 488)}
-TL = {}
-def put(f, card, box, k, ca=1.0):
-    TL.setdefault(f, {})[card] = dict(box=box, k=k, ca=ca)
-K2 = 1.31                                                   # scala contenuti fasi 1-2 (card 152 px)
-# box misurati sul master 2.000 EUR (i frame NON coincidono 1:1 con il file 1.500 EUR)
-for f in range(43, 51): put(f, 'wh', (X0, 191, X1, 342), K2)
-put(51, 'wh', (X0, 232, X1, 383), K2)
-for f in range(52, 64):
-    put(f, 'wh', (X0, 286, X1, 437), K2)
-    put(f, 'bet365', (X0, 123, X1, 274), K2, {52: 0.25, 53: 0.67}.get(f, 1.0))
-# transizione 2 -> 3: box = unione di (box originale + 1 px) e interpolazione monotona fase2 -> fase3
-for f, pb, pw, bb, bw in [(64, .269, .221, (109, 255), (304, 451)),
-                          (65, .782, .697, (82, 218), (343, 480)),
-                          (66, .933, .841, (74, 206), (355, 489))]:
-    put(f, 'bet365', (X0, bb[0], X1, bb[1]), K2 - (K2 - 1) * pb)
-    put(f, 'wh', (X0, bw[0], X1, bw[1]), K2 - (K2 - 1) * pw)
-# SNAI: f65 resta originale (rettangolo scuro d'ingresso, senza contenuti);
-# f66 ingresso in scala verticale come nell'originale, contenuto in dissolvenza
-put(66, 'snai', (X0, 214, X1, 347), 0.86, 0.15)
-for f in range(67, 127):
-    put(f, 'bet365', PH3['bet365'], 1.0)
-    put(f, 'wh', PH3['wh'], 1.0)
-    put(f, 'snai', PH3['snai'], 1.0, {67: 0.63}.get(f, 1.0))
-EXIT_ALPHA = {124: 0.951, 125: 0.52, 126: 0.262}   # regressione passa-alto sui contenuti
-# card SNAI pulsata originale: bordi misurati + 4 px, solo dove esce dalla card nuova
-PULSE = {82: (51, 197, 249, 372), 83: (37, 184, 264, 385), 84: (39, 185, 260, 381), 85: (57, 200, 243, 367),
-         89: (54, 199, 246, 369), 90: (55, 200, 245, 368), 91: (58, 202, 243, 366), 92: (61, 205, 240, 363)}
-
-CONTENT = {'bet365': ('500€', A.WHITE), 'wh': ('105€', A.WHITE), 'snai': ('2.000€', A.ORANGE_AMOUNT)}
-H_LOGO, H_FINO, H_AMT, G1, G2 = 21.0, 10.0, 39.0, 8.0, 3.0
-NUDGE = {'snai': (-4, +4)}   # SNAI: logo 4 px piu' su, FINO A + 2.000EUR 4 px piu' giu'
+# ---------------------------------------------------------------- configurazione del formato
+import importlib
+FMT = os.environ.get('FORMAT', '300x600')
+_cfg = importlib.import_module('formats.f' + FMT)
+globals().update({k: v for k, v in vars(_cfg).items() if not k.startswith('_') and k not in ('A',)})
+RADIUS = getattr(_cfg, 'RADIUS', 11.0)
+CARD_BORDER = np.array(getattr(_cfg, 'CARD_BORDER', A.CARD_BORDER))
+NUDGE = getattr(_cfg, 'NUDGE', {})
+EXIT_ALPHA = getattr(_cfg, 'EXIT_ALPHA', {})
 
 def _asset(rgb, a):
     """le misure si riferiscono all'ingombro pieno (alpha > 50%): l'alone semitrasparente
@@ -87,7 +61,7 @@ def card_layer(box, k, ca, region):
     d = rrect_sdf(W, H, l, t, r, b, RADIUS)
     cov = np.clip(d * S + 0.5, 0, 1)                      # copertura (AA gestito dal downsample)
     g = np.where(d <= 1.2, 1.0, np.exp(-(d - 1.2) / 0.9))
-    col = A.CARD_FILL + (A.CARD_BORDER - A.CARD_FILL) * g[..., None]
+    col = A.CARD_FILL + (CARD_BORDER - A.CARD_FILL) * g[..., None]
     pm = col * cov[..., None]; al = cov.copy()
     return pm, al, (l, t, r, b)
 
@@ -155,12 +129,12 @@ def main(src_dir, out_dir):
     os.makedirs(out_dir, exist_ok=True)
     load = lambda i: np.array(Image.open(os.path.join(src_dir, f'{i:03d}.png')).convert('RGB')).astype(float)
     n = len([f for f in os.listdir(src_dir) if f.endswith('.png')])
-    f81, f93 = load(81), load(93)
+    p0, p1 = PULSE_SRC; f81, f93 = load(p0), load(p1)
     report = {}
     for i in range(1, n + 1):
         orig = load(i); out = orig.copy()
         if i in PULSE:
-            x0, y0, x1, y1 = PULSE[i]; w = (i - 81) / 12
+            x0, y0, x1, y1 = PULSE[i]; w = (i - p0) / (p1 - p0)
             out[y0:y1 + 1, x0:x1 + 1] = (1 - w) * f81[y0:y1 + 1, x0:x1 + 1] + w * f93[y0:y1 + 1, x0:x1 + 1]
         a = EXIT_ALPHA.get(i, 1.0)
         rep = {}
