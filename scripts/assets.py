@@ -6,12 +6,10 @@ e il bianco a ~235: i colori sono campionati dal master stesso.
 """
 import os
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OFF = os.path.join(ROOT, '01_originali_ufficiali')
-FONT = os.path.join(ROOT, '05_tipografia', 'saira-condensed-latin-900-normal.woff')
-SHEAR = 0.22          # obliquo sintetico (~12,4 gradi) che replica l'inclinazione di "FINO A"
 
 # colori campionati dal master (frame 100, pixel pieni dei testi)
 WHITE = np.array([234., 234., 236.])
@@ -39,14 +37,14 @@ def _to_master_colors(rgb):
 def load_logo(name):
     """Restituisce (rgb HxWx3, alpha HxW) croppati sull'inchiostro, risoluzione nativa."""
     if name == 'snai':
-        im = np.array(Image.open(os.path.join(OFF, 'loghi', 'logo_snai_ufficiale.png')).convert('RGBA')).astype(float)
+        im = np.array(Image.open(os.path.join(OFF, 'asset_video_SPORT', 'logo_snai.png')).convert('RGBA')).astype(float)
         a = im[..., 3] / 255; rgb = _to_master_colors(im[..., :3])
     elif name == 'wh':
-        im = np.array(Image.open(os.path.join(OFF, 'loghi', 'logo_williamhill_ufficiale.webp')).convert('RGBA')).astype(float)
+        im = np.array(Image.open(os.path.join(OFF, 'asset_video_SPORT', 'WilliamHill white.png')).convert('RGBA')).astype(float)
         a = im[..., 3] / 255; rgb = np.broadcast_to(WHITE, im.shape[:2] + (3,)).copy()
     elif name == 'bet365':
         # file ufficiale: scritta bianca su riquadro nero -> la luminanza della scritta e' la copertura
-        im = np.array(Image.open(os.path.join(OFF, 'loghi', 'logo_bet365_ufficiale.webp')).convert('RGBA')).astype(float)
+        im = np.array(Image.open(os.path.join(OFF, 'asset_video_SPORT', 'bet365 white.png')).convert('RGBA')).astype(float)
         box = im[..., 3] > 250
         ys, xs = np.where(box)
         y0, y1, x0, x1 = ys.min() + 6, ys.max() - 6, xs.min() + 6, xs.max() - 6   # interno del riquadro nero
@@ -61,20 +59,18 @@ def load_logo(name):
 
 
 def load_fino_a():
-    im = np.array(Image.open(os.path.join(OFF, 'tipografia', 'fino_a_fornito.png')).convert('LA')).astype(float)
+    im = np.array(Image.open(os.path.join(OFF, 'asset_video_SPORT', 'text_fino_a.png')).convert('LA')).astype(float)
     a = im[..., 1] / 255
     a = _crop_ink(a)
     return np.broadcast_to(WHITE, a.shape + (3,)).copy(), a
 
 
+AMOUNT_FILES = {'500€': 'text_500.png', '105€': 'text_105.png', '2.000€': 'text_2000.png'}
 def render_amount(text, color):
-    """Importo in Saira Condensed Black con obliquo SHEAR, reso a 400 px di altezza d'inchiostro."""
-    f = ImageFont.truetype(FONT, 520)
-    W = 520 * len(text) + 800
-    im = Image.new('L', (W, 900), 0)
-    ImageDraw.Draw(im).text((300, 150), text, font=f, fill=255)
-    im = im.transform(im.size, Image.AFFINE, (1, SHEAR, -SHEAR * 450, 0, 1, 0), Image.BICUBIC)
-    a = _crop_ink(np.array(im).astype(float) / 255)
+    """Importo dall'asset estratto dal video (font originale): si usa la sola copertura (alpha),
+    il colore e' quello campionato dal master."""
+    im = np.array(Image.open(os.path.join(OFF, 'asset_video_SPORT', AMOUNT_FILES[text])).convert('RGBA')).astype(float)
+    a = _crop_ink(im[..., 3] / 255)
     return np.broadcast_to(np.array(color, float), a.shape + (3,)).copy(), a
 
 

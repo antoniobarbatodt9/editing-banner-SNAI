@@ -1,12 +1,12 @@
 {
  "psnr_dist_vs_master_db": {
-  "min": 36.89,
-  "mean": 41.84,
+  "min": 36.92,
+  "mean": 42.3,
   "frame_min": 34
  },
  "fuori_card_master_vs_originale_max_diff": 0.0,
- "fuori_card_distribuzione_vs_originale_mean_abs": 1.192,
- "cta_distribuzione_vs_originale_mean_abs": 2.302,
+ "fuori_card_distribuzione_vs_originale_mean_abs": 1.188,
+ "cta_distribuzione_vs_originale_mean_abs": 2.304,
  "misure_riposo_distribuzione": {
   "47": {
    "wh": {
@@ -24,7 +24,7 @@
     },
     "importo": {
      "h": 51,
-     "w": 126
+     "w": 130
     }
    }
   },
@@ -44,7 +44,7 @@
     },
     "importo": {
      "h": 51,
-     "w": 126
+     "w": 130
     }
    },
    "bet365": {
@@ -62,7 +62,7 @@
     },
     "importo": {
      "h": 51,
-     "w": 142
+     "w": 136
     }
    }
   },
@@ -78,11 +78,11 @@
     },
     "fino_a": {
      "h": 10,
-     "w": 33
+     "w": 34
     },
     "importo": {
      "h": 39,
-     "w": 108
+     "w": 104
     }
    },
    "wh": {
@@ -96,11 +96,11 @@
     },
     "fino_a": {
      "h": 10,
-     "w": 33
+     "w": 34
     },
     "importo": {
      "h": 39,
-     "w": 96
+     "w": 100
     }
    },
    "snai": {
@@ -117,8 +117,8 @@
      "w": 34
     },
     "importo": {
-     "h": 39,
-     "w": 150
+     "h": 40,
+     "w": 144
     }
    }
   }
@@ -140,7 +140,7 @@
     },
     "importo": {
      "h": 51,
-     "w": 126
+     "w": 130
     }
    }
   },
@@ -160,7 +160,7 @@
     },
     "importo": {
      "h": 51,
-     "w": 126
+     "w": 130
     }
    },
    "bet365": {
@@ -178,7 +178,7 @@
     },
     "importo": {
      "h": 51,
-     "w": 142
+     "w": 136
     }
    }
   },
@@ -194,11 +194,11 @@
     },
     "fino_a": {
      "h": 10,
-     "w": 33
+     "w": 34
     },
     "importo": {
      "h": 39,
-     "w": 108
+     "w": 104
     }
    },
    "wh": {
@@ -212,11 +212,11 @@
     },
     "fino_a": {
      "h": 10,
-     "w": 33
+     "w": 34
     },
     "importo": {
      "h": 39,
-     "w": 96
+     "w": 100
     }
    },
    "snai": {
@@ -234,24 +234,24 @@
     },
     "importo": {
      "h": 39,
-     "w": 150
+     "w": 144
     }
    }
   }
  },
  "stabilita": {
   "snai_f68-123_master_max_diff": 0.0,
-  "snai_f68-123_dist_mean_abs": 0.014,
+  "snai_f68-123_dist_mean_abs": 0.017,
   "bet365_f54-63_master_max_diff": 0.0,
-  "bet365_f54-63_dist_mean_abs": 0.099,
+  "bet365_f54-63_dist_mean_abs": 0.117,
   "bet365_f67-123_master_max_diff": 0.0,
-  "bet365_f67-123_dist_mean_abs": 0.015,
+  "bet365_f67-123_dist_mean_abs": 0.008,
   "wh_f43-50_master_max_diff": 0.0,
-  "wh_f43-50_dist_mean_abs": 0.093,
+  "wh_f43-50_dist_mean_abs": 0.105,
   "wh_f52-63_master_max_diff": 0.0,
-  "wh_f52-63_dist_mean_abs": 0.043,
+  "wh_f52-63_dist_mean_abs": 0.06,
   "wh_f67-123_master_max_diff": 0.0,
-  "wh_f67-123_dist_mean_abs": 0.023,
+  "wh_f67-123_dist_mean_abs": 0.014,
   "originale_snai_f81-93_mean_abs_max": 41.531
  }
 }

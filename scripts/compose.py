@@ -56,6 +56,7 @@ PULSE = {82: (51, 197, 249, 372), 83: (37, 184, 264, 385), 84: (39, 185, 260, 38
 
 CONTENT = {'bet365': ('500€', A.WHITE), 'wh': ('105€', A.WHITE), 'snai': ('2.000€', A.ORANGE_AMOUNT)}
 H_LOGO, H_FINO, H_AMT, G1, G2 = 21.0, 10.0, 39.0, 8.0, 3.0
+NUDGE = {'snai': (-4, +4)}   # SNAI: logo 4 px piu' su, FINO A + 2.000EUR 4 px piu' giu'
 
 def _asset(rgb, a):
     """le misure si riferiscono all'ingombro pieno (alpha > 50%): l'alone semitrasparente
@@ -129,6 +130,8 @@ def layout(card, box, k):
     amt_x = cx - aw / 2
     # righe allineate alla griglia dei pixel: altezze d'inchiostro nitide e identiche tra le card
     y_logo = round(top); y_fino = round(top + hl + g1); y_amt = round(top + hl + g1 + hf + g2)
+    dl, da = NUDGE.get(card, (0, 0))                      # ritocchi richiesti (px a scala 1)
+    y_logo += round(dl * k); y_fino += round(da * k); y_amt += round(da * k)
     return {'logo': (cx - lw / 2, y_logo, hl, lw), 'fino': (amt_x + 2 * k, y_fino, hf),
             'amount': (amt_x, y_amt, ha, aw)}
 

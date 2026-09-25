@@ -1,4 +1,12 @@
-# SNAI Bonus Sport 300×600: render campione corretto e QA
+# SNAI Bonus Sport 300×600: render campione corretto e QA (v2)
+
+**Modifiche della v2, su tua richiesta:**
+- Loghi, "FINO A" e importi presi dagli asset estratti dal video (cartella `SPORT/` su `main`,
+  copiata in `01_originali_ufficiali/asset_video_SPORT/`). Gli importi sono di nuovo nel **font
+  originale** e il font sostitutivo Saira è stato rimosso.
+- Card SNAI: logo **4 px più su**; "FINO A" e 2.000 € **4 px più giù**. "FINO A" si sposta insieme alla
+  cifra per restare agganciato all'importo.
+
 
 **Master di riferimento:** `00_master_approvato/SNAI_BonusSport_300x600_MASTER_2000.mp4`
 (importo SNAI 2.000 €; sha256 `9d7dff8c…d8e06c`). Il file 1.500 € è archiviato come superato.
@@ -85,11 +93,7 @@ Riferimento: nell'originale, durante il pulse, lo stesso riquadro SNAI varia in 
    finale), e andrebbe inventato. Hai escluso qualunque modifica del video originale, quindi la SNAI
    conserva il suo ingombro. Larghezze, loghi, "FINO A" e importi sono invece uniformi, e il contenuto
    della SNAI è centrato nella sua card.
-2. **Font degli importi.** Come richiesto, gli importi usano lo stesso font di "FINO A". Il font
-   originale non è identificato. Ho usato il più vicino tra 52 famiglie confrontate: **Saira Condensed
-   Black** (licenza OFL) con un obliquo di ~12,4° che replica l'inclinazione di "FINO A". È un
-   sostituto da approvare, non il font certificato. Se hai il file del font originale, lo sostituisco
-   senza toccare nient'altro (`05_tipografia/`, `scripts/assets.py`).
+2. **Font degli importi:** risolto nella v2. Gli importi sono gli asset originali del video, ridimensionati in proporzione e ricolorati con il bianco e l'arancio campionati dal master.
 3. **Scala delle fasi 1–2** (WH da solo, bet365+WH): ho applicato le stesse proporzioni della fase a
    tre card (28/13/51 px) mantenendo le card grandi originali. Se vuoi 21/10/39 anche lì, le card
    andrebbero rimpicciolite sopra il pallone in movimento, con lo stesso problema di sfondo scoperto del
@@ -99,17 +103,18 @@ Riferimento: nell'originale, durante il pulse, lo stesso riquadro SNAI varia in 
 
 ## 6. Asset usati
 
-- Loghi: i file ufficiali forniti (`01_originali_ufficiali/loghi/`). Nulla è estratto dal video né rigenerato.
-- "FINO A": l'asset fornito (`01_originali_ufficiali/tipografia/fino_a_fornito.png`).
+- Loghi, "FINO A" e importi: gli asset forniti (`01_originali_ufficiali/asset_video_SPORT/`). Nulla è
+  rigenerato; le scale sono uniformi, quindi niente deformazioni.
 - Card: ricostruite in modo deterministico con le misure dell'originale (raggio 11 px, fondo 19/20/24,
   bordo 47/48/52).
 - Tutto è riproducibile:
   1. `python3 scripts/compose.py FRAMES_ORIGINALI OUT layout.json`
   2. `scripts/encode.sh OUT`
-  3. `python3 scripts/qa.py …`
+  3. `python3 scripts/qa.py …` e `python3 scripts/qa_sheets.py …`
+- Rigenerazione completa (render, encode, QA): circa 70 secondi.
 - Timeline frame per frame: `02_inventory/timeline_corretta_e_layout.json`.
 
 ## Gate
 
 Mi fermo qui, con render campione e report QA consegnati. Non propago la correzione ad altri formati
-finché non arriva un'approvazione esplicita, in particolare sui punti 1–3.
+finché non arriva un'approvazione esplicita, in particolare sui punti 1 e 3.

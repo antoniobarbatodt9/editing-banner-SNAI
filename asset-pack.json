@@ -23,14 +23,14 @@
  "outputs": {
   "master_lossless": "09_rebuild_master/SNAI_BonusSport_300x600_CORRETTO_master_lossless_rgb.mkv",
   "distribuzione": "11_distribuzione/SNAI_BonusSport_300x600_CORRETTO.mp4",
-  "sha256_distribuzione": "a7254b317b151ea4a04ae6d56dd5894e90efdfb3b60d3ee57348f0e46762c7ec"
+  "sha256_distribuzione": "b0d36d12750eef24f5bc387683b46390d6566f193db87346f83e16a1d4fb7938"
  },
  "assets": [
   {
    "id": "logo_snai",
    "name": "Logo SNAI",
    "source_type": "ufficiale fornito dal cliente",
-   "source_file": "01_originali_ufficiali/loghi/logo_snai_ufficiale.png",
+   "source_file": "01_originali_ufficiali/asset_video_SPORT/logo_snai.png",
    "output_file": "06_loghi/logo_snai_mastercolor.png",
    "role": "logo card SNAI",
    "editable": false,
@@ -45,7 +45,7 @@
    "id": "logo_wh",
    "name": "Logo William Hill",
    "source_type": "ufficiale fornito dal cliente",
-   "source_file": "01_originali_ufficiali/loghi/logo_williamhill_ufficiale.webp",
+   "source_file": "01_originali_ufficiali/asset_video_SPORT/WilliamHill white.png",
    "output_file": "06_loghi/logo_wh_mastercolor.png",
    "role": "logo card WH",
    "editable": false,
@@ -60,7 +60,7 @@
    "id": "logo_bet365",
    "name": "Logo bet365",
    "source_type": "ufficiale fornito dal cliente",
-   "source_file": "01_originali_ufficiali/loghi/logo_bet365_ufficiale.webp",
+   "source_file": "01_originali_ufficiali/asset_video_SPORT/bet365 white.png",
    "output_file": "06_loghi/logo_bet365_mastercolor.png",
    "role": "logo card bet365",
    "editable": false,
@@ -75,7 +75,7 @@
    "id": "text_fino_a",
    "name": "FINO A",
    "source_type": "asset fornito dal cliente",
-   "source_file": "01_originali_ufficiali/tipografia/fino_a_fornito.png",
+   "source_file": "01_originali_ufficiali/asset_video_SPORT/text_fino_a.png",
    "output_file": null,
    "role": "etichetta sopra importo",
    "editable": false,
@@ -84,21 +84,6 @@
    "status": "in uso (outlined)",
    "z_index": 3,
    "quality_notes": "81x25 raster, usato solo in riduzione (10-13 px)",
-   "class": "T"
-  },
-  {
-   "id": "font_importi",
-   "name": "Saira Condensed Black + obliquo 0.22",
-   "source_type": "font sostitutivo (OFL) scelto per somiglianza con FINO A",
-   "source_file": "05_tipografia/saira-condensed-latin-900-normal.woff",
-   "output_file": null,
-   "role": "importi 500€ / 2.000€ / 105€",
-   "editable": true,
-   "official": false,
-   "inferred": false,
-   "status": "DA APPROVARE (sostituto)",
-   "z_index": 3,
-   "quality_notes": "font originale non identificato; il cliente indica che deve coincidere con FINO A",
    "class": "T"
   },
   {
@@ -130,16 +115,32 @@
    "z_index": 1,
    "quality_notes": "diff 0 sul master; unica eccezione l'anello del pulse SNAI f82-85/f89-92, riempito con pixel originali dei frame 81/93 (sfondo nero statico)",
    "class": "B"
+  },
+  {
+   "id": "text_importi",
+   "name": "Importi 500€ / 2.000€ / 105€",
+   "class": "T",
+   "source_type": "asset estratti dal video (font originale)",
+   "source_file": "01_originali_ufficiali/asset_video_SPORT/text_500.png, text_2000.png, text_105.png",
+   "output_file": null,
+   "role": "importi",
+   "editable": false,
+   "official": true,
+   "inferred": false,
+   "status": "in uso (outlined)",
+   "z_index": 3,
+   "quality_notes": "usata la sola alpha; colore campionato dal master; scala uniforme, ridimensionamento in riduzione"
   }
  ],
  "approvals": {
   "render_campione": "in attesa",
-  "font_importi": "in attesa",
+  "font_importi": "risolto: asset originali",
   "altezza_card_SNAI": "in attesa",
   "propagazione_altri_formati": "bloccata fino ad approvazione"
  },
  "notes": [
   "Nessuno sfondo generato o inventato.",
-  "Vedi REPORT_300x600.md e 10_qa/qa_report.json."
+  "Vedi REPORT_300x600.md e 10_qa/qa_report.json.",
+  "v2: SNAI logo -4 px, FINO A + importo +4 px."
  ]
 }
