@@ -1,0 +1,143 @@
+{
+ "psnr_dist_vs_master_db": {
+  "min": 31.07,
+  "mean": 37.3,
+  "frame_min": 139
+ },
+ "fuori_card_master_vs_originale_max_diff": 0.0,
+ "fuori_card_distribuzione_vs_originale_mean_abs": 1.789,
+ "cta_distribuzione_vs_originale_mean_abs": 16.026,
+ "misure_riposo_distribuzione": {
+  "64": {
+   "wh": {
+    "card_px": [
+     177,
+     37
+    ],
+    "logo": {
+     "h": 19,
+     "w": 78
+    },
+    "fino_a": {
+     "h": 5,
+     "w": 17
+    },
+    "importo": {
+     "h": 22,
+     "w": 56
+    }
+   }
+  },
+  "86": {
+   "bet365": {
+    "card_px": [
+     177,
+     37
+    ],
+    "logo": {
+     "h": 19,
+     "w": 68
+    },
+    "fino_a": {
+     "h": 5,
+     "w": 17
+    },
+    "importo": {
+     "h": 22,
+     "w": 59
+    }
+   }
+  },
+  "112": {
+   "snai": {
+    "card_px": [
+     177,
+     37
+    ],
+    "logo": {
+     "h": 19,
+     "w": 71
+    },
+    "fino_a": {
+     "h": 6,
+     "w": 26
+    },
+    "importo": {
+     "h": 22,
+     "w": 87
+    }
+   }
+  }
+ },
+ "misure_riposo_master": {
+  "64": {
+   "wh": {
+    "card_px": [
+     177,
+     37
+    ],
+    "logo": {
+     "h": 19,
+     "w": 78
+    },
+    "fino_a": {
+     "h": 5,
+     "w": 17
+    },
+    "importo": {
+     "h": 22,
+     "w": 56
+    }
+   }
+  },
+  "86": {
+   "bet365": {
+    "card_px": [
+     177,
+     37
+    ],
+    "logo": {
+     "h": 19,
+     "w": 68
+    },
+    "fino_a": {
+     "h": 5,
+     "w": 17
+    },
+    "importo": {
+     "h": 22,
+     "w": 59
+    }
+   }
+  },
+  "112": {
+   "snai": {
+    "card_px": [
+     177,
+     37
+    ],
+    "logo": {
+     "h": 19,
+     "w": 71
+    },
+    "fino_a": {
+     "h": 6,
+     "w": 26
+    },
+    "importo": {
+     "h": 22,
+     "w": 87
+    }
+   }
+  }
+ },
+ "stabilita": {
+  "wh_f63-67_master_max_diff": 0.0,
+  "wh_f63-67_dist_mean_abs": 0.081,
+  "bet365_f85-89_master_max_diff": 0.0,
+  "bet365_f85-89_dist_mean_abs": 0.06,
+  "snai_f108-150_master_max_diff": 0.0,
+  "snai_f108-150_dist_mean_abs": 0.093,
+  "originale_snai_f119-128_mean_abs_max": 40.283
+ }
+}

@@ -39,7 +39,8 @@ PULSE_BRIGHT_GUARD = getattr(_cfg, 'PULSE_BRIGHT_GUARD', False)
 PULSE_FLOW_ROWS = getattr(_cfg, 'PULSE_FLOW_ROWS', None)
 LAYOUT_H = getattr(_cfg, 'LAYOUT_H', None)        # formati orizzontali: logo | FINO A sopra | importo, in riga
 FINO_REVEAL = getattr(_cfg, 'FINO_REVEAL', {})
-CUT_XMIN = getattr(_cfg, 'CUT_XMIN', {})          # x minima dell'importo nel frame originale (orizzontali)    # {frame: {card: frazione}}: FINO A scritto lettera per lettera
+CUT_XMIN = getattr(_cfg, 'CUT_XMIN', {})
+CUT_CLEAN = getattr(_cfg, 'CUT_CLEAN', False)          # x minima dell'importo nel frame originale (orizzontali)    # {frame: {card: frazione}}: FINO A scritto lettera per lettera
 if hasattr(_cfg, 'CARD_FILL'): A.CARD_FILL = np.array(_cfg.CARD_FILL, float)  # pulizia dei ritagli del conteggio nei frame in dissolvenza      # rettangoli che restano pixel reali dentro la fascia interpolata
 COUNT = getattr(_cfg, 'COUNT', {})                # {frame: {card: frame_originale}} -> valore intermedio del conteggio                # {frame: frame_di_riposo} -> dissolvenza/glitch: opacita' stimata pixel per pixel
 
@@ -112,6 +113,7 @@ def layout(card, box, k):
         lw = _logo[card]['w'] * hl / _logo[card]['h']; aw = _amt[card]['w'] * ha / _amt[card]['h']
         fw = _fino['w'] * hf / _fino['h']
         lr, ar, base, ft = LAYOUT_H['logo_right'], LAYOUT_H['amt_right'], LAYOUT_H['base'], LAYOUT_H['fino_top']
+        lr = LAYOUT_H.get('logo_right_card', {}).get(card, lr)
         return {'logo': (lr - lw, base - hl, hl, lw), 'fino': (lr - fw, ft, hf),
                 'amount': (ar - aw, base - ha, ha, aw)}
     cx, cy = (x0 + x1 + 1) / 2, (y0 + y1 + 1) / 2
@@ -172,6 +174,8 @@ def cut_amount(src_frame, card, ref_frame=None):
     else:
         _, _, bb = _amount_mask(load(ref_frame), TL[ref_frame][card]['box'], orange, CUT_XMIN.get(card))
         bb = (bb[0] - 6, bb[1] - 1, bb[2] + 6, bb[3] + 1)
+        if CUT_CLEAN:      # l'allargamento non deve includere il bordo della card
+            cb = TL[src_frame][card]['box']; bb = (max(bb[0], cb[0] + 4), bb[1], min(bb[2], cb[2] - 4), bb[3])
     x0, y0, x1, y1 = bb
     sub = img[y0:y1 + 1, x0:x1 + 1]
     v = sub[..., 0] if orange else sub.min(-1)
@@ -188,6 +192,19 @@ def cut_amount(src_frame, card, ref_frame=None):
         import cv2
         a = np.clip((a - 0.3) / 0.6, 0, 1)
         a = a * cv2.morphologyEx((a > 0.2).astype(np.uint8), cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
+    if CUT_CLEAN:
+        # via frammenti isolati (bordo card, rumore): tiene solo i componenti alti almeno meta' del numero
+        import cv2
+        n, lab, st, _ = cv2.connectedComponentsWithStats((a > 0.25).astype(np.uint8))
+        keep = np.zeros(n, bool)
+        for k in range(1, n):
+            x, y, w, h, ar = st[k]
+            edge_bar = w <= 3 and (x <= 1 or x + w >= a.shape[1] - 1)      # bordo card ai lati del ritaglio
+            if edge_bar or ar < 4: continue
+            if h >= 0.45 * a.shape[0] or (h >= 2 and w >= 2 and y + h >= 0.8 * a.shape[0]):
+                keep[k] = True
+        km = keep[lab]; km = cv2.dilate(km.astype(np.uint8), np.ones((3, 3), np.uint8)).astype(bool)
+        a = a * km
     col = A.ORANGE_AMOUNT if orange else A.WHITE
     res = _asset(np.broadcast_to(np.array(col, float), a.shape + (3,)).copy(), a)
     res['h'] = y1 - y0 + 1 if ref_frame is None else y1 - y0 - 1      # altezza d'inchiostro = altezza del simbolo EUR
@@ -323,6 +340,11 @@ def main(src_dir, out_dir):
         for card, spec in TL.get(i, {}).items():
             region, pm, al, L = render_card(card, spec, i)
             rx0, ry0, rx1, ry1 = region
+            if (rx0 < 0 or ry0 < 0 or rx1 >= W0 or ry1 >= H0) and i in UNMIX:
+                # card a filo del bordo in dissolvenza d'uscita: si lavora sulla parte dentro il frame
+                cx0, cy0, cx1, cy1 = max(rx0, 0), max(ry0, 0), min(rx1, W0 - 1), min(ry1, H0 - 1)
+                pm = pm[cy0 - ry0:cy1 - ry0 + 1, cx0 - rx0:cx1 - rx0 + 1]; al = al[cy0 - ry0:cy1 - ry0 + 1, cx0 - rx0:cx1 - rx0 + 1]
+                rx0, ry0, rx1, ry1 = cx0, cy0, cx1, cy1
             if rx0 < 0 or ry0 < 0 or rx1 >= W0 or ry1 >= H0:
                 # card oltre il bordo del banner: compone su tela estesa e ritaglia
                 outp = np.pad(out, ((PAD, PAD), (PAD, PAD), (0, 0)), mode='edge')

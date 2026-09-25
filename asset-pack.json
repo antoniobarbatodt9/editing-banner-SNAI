@@ -85,6 +85,17 @@
    "fps": 15,
    "frames": 150,
    "duration_s": 10.0
+  },
+  {
+   "file": "00_master_approvato/SNAI_BonusSport_300x50_MASTER.mp4",
+   "sha256": "a3682e8088ef2318e83ceb1f2f02d5e090623a460b5d9c111d7afea64ce366a1",
+   "size": [
+    300,
+    50
+   ],
+   "fps": 15,
+   "frames": 150,
+   "duration_s": 10.0
   }
  ],
  "outputs": {
@@ -132,8 +143,15 @@
    "master_lossless": "09_rebuild_master/SNAI_BonusSport_728x90_CORRETTO_master_lossless_rgb.mkv",
    "distribuzione": "11_distribuzione/SNAI_BonusSport_728x90_CORRETTO.mp4",
    "sha256_distribuzione": "4c5ecf497de59fe63d8c198aa5e85125cbdd41b3d7666881216289b03c8ecd66",
-   "stato": "in attesa di approvazione",
+   "stato": "approvato",
    "note": "layout orizzontale; card opache; FINO A lettera per lettera conservato; card SNAI senza pulse (f120-122, f125-127 interpolati)"
+  },
+  "300x50": {
+   "master_lossless": "09_rebuild_master/SNAI_BonusSport_300x50_CORRETTO_master_lossless_rgb.mkv",
+   "distribuzione": "11_distribuzione/SNAI_BonusSport_300x50_CORRETTO.mp4",
+   "sha256_distribuzione": "98a80d8d92c7627be07ba7e4c10bdf576537944e804e5185c17fc86fb547e03d",
+   "stato": "in attesa di approvazione",
+   "note": "layout orizzontale; card opache; FINO A lettera per lettera; card SNAI senza pulse (f120-122, f125-127 interpolati)"
   }
  },
  "assets": [
