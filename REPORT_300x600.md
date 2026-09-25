@@ -1,4 +1,7 @@
-# SNAI Bonus Sport 300×600: render campione corretto e QA (v2)
+# SNAI Bonus Sport 300×600: render campione corretto e QA (v3)
+
+**Modifica della v3:** l'importo 2.000€ è ora il nuovo asset, più pulito, caricato su `main` (commit `bd57228`, `SPORT/…/text_2000.png`). Resta alto 39 px e diventa largo 154 px, con 10 px di margine per lato nella card. Il resto è invariato rispetto alla v2.
+
 
 **Modifiche della v2, su tua richiesta:**
 - Loghi, "FINO A" e importi presi dagli asset estratti dal video (cartella `SPORT/` su `main`,

@@ -1,12 +1,12 @@
 {
  "psnr_dist_vs_master_db": {
-  "min": 36.92,
-  "mean": 42.3,
+  "min": 36.93,
+  "mean": 41.88,
   "frame_min": 34
  },
  "fuori_card_master_vs_originale_max_diff": 0.0,
- "fuori_card_distribuzione_vs_originale_mean_abs": 1.188,
- "cta_distribuzione_vs_originale_mean_abs": 2.304,
+ "fuori_card_distribuzione_vs_originale_mean_abs": 1.189,
+ "cta_distribuzione_vs_originale_mean_abs": 2.298,
  "misure_riposo_distribuzione": {
   "47": {
    "wh": {
@@ -114,11 +114,11 @@
     },
     "fino_a": {
      "h": 10,
-     "w": 34
+     "w": 33
     },
     "importo": {
-     "h": 40,
-     "w": 144
+     "h": 39,
+     "w": 154
     }
    }
   }
@@ -230,28 +230,28 @@
     },
     "fino_a": {
      "h": 10,
-     "w": 34
+     "w": 33
     },
     "importo": {
      "h": 39,
-     "w": 144
+     "w": 154
     }
    }
   }
  },
  "stabilita": {
   "snai_f68-123_master_max_diff": 0.0,
-  "snai_f68-123_dist_mean_abs": 0.017,
+  "snai_f68-123_dist_mean_abs": 0.022,
   "bet365_f54-63_master_max_diff": 0.0,
-  "bet365_f54-63_dist_mean_abs": 0.117,
+  "bet365_f54-63_dist_mean_abs": 0.106,
   "bet365_f67-123_master_max_diff": 0.0,
-  "bet365_f67-123_dist_mean_abs": 0.008,
+  "bet365_f67-123_dist_mean_abs": 0.035,
   "wh_f43-50_master_max_diff": 0.0,
-  "wh_f43-50_dist_mean_abs": 0.105,
+  "wh_f43-50_dist_mean_abs": 0.104,
   "wh_f52-63_master_max_diff": 0.0,
-  "wh_f52-63_dist_mean_abs": 0.06,
+  "wh_f52-63_dist_mean_abs": 0.16,
   "wh_f67-123_master_max_diff": 0.0,
-  "wh_f67-123_dist_mean_abs": 0.014,
+  "wh_f67-123_dist_mean_abs": 0.016,
   "originale_snai_f81-93_mean_abs_max": 41.531
  }
 }

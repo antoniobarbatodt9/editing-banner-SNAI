@@ -23,7 +23,7 @@
  "outputs": {
   "master_lossless": "09_rebuild_master/SNAI_BonusSport_300x600_CORRETTO_master_lossless_rgb.mkv",
   "distribuzione": "11_distribuzione/SNAI_BonusSport_300x600_CORRETTO.mp4",
-  "sha256_distribuzione": "b0d36d12750eef24f5bc387683b46390d6566f193db87346f83e16a1d4fb7938"
+  "sha256_distribuzione": "393d4907d2e20bb58fcf1b46d31ede6ae39dbbcc3a381aa3a483a72c26371199"
  },
  "assets": [
   {
@@ -141,6 +141,7 @@
  "notes": [
   "Nessuno sfondo generato o inventato.",
   "Vedi REPORT_300x600.md e 10_qa/qa_report.json.",
-  "v2: SNAI logo -4 px, FINO A + importo +4 px."
+  "v2: SNAI logo -4 px, FINO A + importo +4 px.",
+  "v3: text_2000.png sostituito con la versione pulita (main bd57228)."
  ]
 }
