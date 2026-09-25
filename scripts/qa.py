@@ -26,7 +26,7 @@ rep['psnr_dist_vs_master_db'] = {'min': round(min(ps), 2), 'mean': round(float(n
 def untouched_mask(i):
     m = np.ones(L(o_dir, 1).shape[:2], bool)
     for card, spec in C.TL.get(i, {}).items():
-        x0, y0, x1, y1 = spec['box']; m[y0 - 2:y1 + 3, x0 - 2:x1 + 3] = False
+        x0, y0, x1, y1 = spec['box']; m[max(0, y0 - 2):y1 + 3, max(0, x0 - 2):x1 + 3] = False
     if i in C.PULSE:
         x0, y0, x1, y1 = C.PULSE[i]; m[y0:y1 + 1, x0:x1 + 1] = False
     return m

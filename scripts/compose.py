@@ -164,6 +164,8 @@ def main(src_dir, out_dir):
     report = {}
     for i in range(1, n + 1):
         orig = load(i); out = orig.copy()
+        PAD = 24; H0, W0 = orig.shape[:2]
+        origp = np.pad(orig, ((PAD, PAD), (PAD, PAD), (0, 0)), mode='edge')
         if i in PULSE and i in PULSE_FLOW:
             fa, fb = PULSE_FLOW[i]; x0, y0, x1, y1 = PULSE[i]
             I = flow_interp(load(fa), load(fb), (i - fa) / (fb - fa))
@@ -176,6 +178,14 @@ def main(src_dir, out_dir):
         for card, spec in TL.get(i, {}).items():
             region, pm, al, L = render_card(card, spec)
             rx0, ry0, rx1, ry1 = region
+            if rx0 < 0 or ry0 < 0 or rx1 >= W0 or ry1 >= H0:
+                # card oltre il bordo del banner: compone su tela estesa e ritaglia
+                outp = np.pad(out, ((PAD, PAD), (PAD, PAD), (0, 0)), mode='edge')
+                slp = (slice(ry0 + PAD, ry1 + PAD + 1), slice(rx0 + PAD, rx1 + PAD + 1))
+                outp[slp] = outp[slp] * (1 - al[..., None]) + pm
+                out = outp[PAD:PAD + H0, PAD:PAD + W0]
+                rep[card] = {k: [round(v, 2) for v in vals] for k, vals in L.items()}; rep[card]['box'] = spec['box']
+                continue
             sl = (slice(ry0, ry1 + 1), slice(rx0, rx1 + 1))
             if i in UNMIX:
                 # dissolvenza/glitch d'uscita: contenuto finale identico al riposo -> si toglie la card
