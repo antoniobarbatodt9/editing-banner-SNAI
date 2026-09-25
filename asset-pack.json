@@ -40,6 +40,17 @@
    "fps": 15,
    "frames": 118,
    "duration_s": 7.87
+  },
+  {
+   "file": "00_master_approvato/SNAI_BonusSport_300x250_MASTER.mp4",
+   "sha256": "508941538ba827dc2ad069f35776c753b29a7e66442f9bb00c27157906ec3be5",
+   "size": [
+    300,
+    250
+   ],
+   "fps": 15,
+   "frames": 150,
+   "duration_s": 10.0
   }
  ],
  "outputs": {
@@ -61,6 +72,13 @@
    "sha256_distribuzione": "1e5ccaefbe408e947c0515129842b3b6c5a655ead1f82e1896e3123701ab423f",
    "stato": "in attesa di approvazione",
    "note": "card opache; card SNAI senza pulse (v5): f90-92 e f96-98 con fascia di sfondo interpolata (inferred) tra frame reali; CTA con pulse originale"
+  },
+  "300x250": {
+   "master_lossless": "09_rebuild_master/SNAI_BonusSport_300x250_CORRETTO_master_lossless_rgb.mkv",
+   "distribuzione": "11_distribuzione/SNAI_BonusSport_300x250_CORRETTO.mp4",
+   "sha256_distribuzione": "0af4c6e3e266e75caa61509ea59f097792b39d8e9c3da8931e2440516c90187c",
+   "stato": "in attesa di approvazione",
+   "note": "card SNAI senza pulse: f116-119 e f123-126 con fascia y0-212 interpolata (inferred), CTA reale"
   }
  },
  "assets": [

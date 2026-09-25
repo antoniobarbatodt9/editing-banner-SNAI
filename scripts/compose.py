@@ -33,6 +33,7 @@ NUDGE = getattr(_cfg, 'NUDGE', {})
 EXIT_ALPHA = getattr(_cfg, 'EXIT_ALPHA', {})
 PULSE_FLOW = getattr(_cfg, 'PULSE_FLOW', {})      # {frame: (frame_reale_prima, frame_reale_dopo)} -> interpolazione con flusso ottico
 UNMIX = getattr(_cfg, 'UNMIX', {})
+PULSE_KEEP = getattr(_cfg, 'PULSE_KEEP', [])      # rettangoli che restano pixel reali dentro la fascia interpolata
 COUNT = getattr(_cfg, 'COUNT', {})                # {frame: {card: frame_originale}} -> valore intermedio del conteggio                # {frame: frame_di_riposo} -> dissolvenza/glitch: opacita' stimata pixel per pixel
 
 def _asset(rgb, a):
@@ -252,8 +253,19 @@ def main(src_dir, out_dir):
             # fascia ricostruita con bordo sfumato (8 px) verso i pixel reali del frame
             wy = np.ones(out.shape[0]); fe = 8
             wy[:y0] = 0; wy[y1 + 1:] = 0
-            wy[y0:y0 + fe] = np.linspace(0, 1, fe); wy[y1 + 1 - fe:y1 + 1] = np.linspace(1, 0, fe)
-            wgt = wy[:, None, None]
+            if y0 > 0: wy[y0:y0 + fe] = np.linspace(0, 1, fe)             # niente sfumatura sul bordo del banner
+            if y1 < out.shape[0] - 1: wy[y1 + 1 - fe:y1 + 1] = np.linspace(1, 0, fe)
+            wgt = np.repeat(wy[:, None], out.shape[1], 1)
+            for kx0, ky0, kx1, ky1 in PULSE_KEEP:
+                # es. CTA: resta il pixel reale del frame, ma solo sulla sua sagoma (pixel arancio del frame,
+                # dilatati di 2 px per il bordo AA), non su un rettangolo che includerebbe il bordo della card
+                sub = orig[ky0:ky1 + 1, kx0:kx1 + 1]
+                cm = (sub[..., 0] > 120) & (sub[..., 0] - sub[..., 2] > 70)
+                cm = cv2.dilate(cm.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(bool)
+                blk = wgt[ky0:ky1 + 1, kx0:kx1 + 1]; blk[cm] = 0
+            if PULSE_KEEP:
+                wgt = cv2.GaussianBlur(wgt.astype(np.float32), (0, 0), 0.8) * (wgt > 0)
+            wgt = wgt[..., None]
             out = out * (1 - wgt) + I * wgt
         elif i in PULSE:
             x0, y0, x1, y1 = PULSE[i]; w = (i - p0) / (p1 - p0)
