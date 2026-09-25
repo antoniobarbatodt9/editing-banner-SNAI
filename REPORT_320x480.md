@@ -1,9 +1,9 @@
-# SNAI Bonus Sport 320×480: render corretto e QA
+# SNAI Bonus Sport 320×480: render corretto e QA (v5)
 
 **Master di riferimento:** `00_master_approvato/SNAI_BonusSport_320x480_MASTER.mp4`
 (7,87 s, 118 frame, 15 fps). La durata è mantenuta.
 
-**Decisioni del cliente applicate:** card opache (A), pulse secondo l'opzione 1, importi a 57 px.
+**Decisioni del cliente applicate:** card opache (A), card SNAI senza pulse (v5), CTA con il suo pulse, importi a 57 px, conteggio ripristinato (v4).
 
 | Consegna | File |
 |---|---|
@@ -51,17 +51,27 @@ in quei frame, lo sfondo non compare mai. Mantenere la trasparenza avrebbe richi
 velo di rete sotto il testo. Una card opaca invece copre per intero la card originale, quindi non si
 ricostruisce niente.
 
-## Pulse SNAI (opzione 1)
+## Pulse SNAI eliminato (v5)
 
-- **Nell'originale (f90–99):** due espansioni (f90–92 fino a 1,27×, f96–98 fino a 1,07×) e due
-  contrazioni (f93–95 fino a 0,86×, f99).
-- **Contrazioni rimosse:** la card resta a misura piena, che copre già l'originale.
-- **Espansioni rimaste, con la stessa ampiezza dell'originale:** lo sfondo sotto la card ingrandita
-  non compare in nessun frame. Una card più piccola lo scoprirebbe, e andrebbe inventato. Durante le
-  espansioni anche logo e testi si ingrandiscono insieme alla card, restando proporzionati.
-- **Ricostruzione dello sfondo scartata:** l'ho testata con flusso ottico tra frame reali. Il risultato
-  mostrava un gradino sulla rete nei frame 90 e 96 e, con il bordo sfumato, il contorno fantasma della
-  vecchia card (vedi la tavola di test).
+Su richiesta del cliente la card SNAI **non pulsa mai**: dal termine del conteggio (f84) all'uscita (f116)
+resta ferma a misura di riposo. Verifica sul master: differenza **0** tra fotogrammi consecutivi
+all'interno della card in tutta la finestra f84–115.
+
+- **Tutta la permanenza a schermo ricontrollata** (f84–115), misurando il bordo della card originale
+  frame per frame. L'unico pulse della card SNAI è il doppio ciclo **f90–99** (espansione f90–92,
+  contrazione f93–95, espansione f96–98, contrazione f99).
+- **f112–114:** a ingrandirsi è la **CTA "SCOPRI DI PIÙ"** (fino a +22%), il cui pulse resta invariato
+  come da brief. Il bordo della card SNAI in quei frame è fermo a misura di riposo sia nell'originale
+  sia nel corretto.
+- **Contrazioni (f93–95, f99):** card a misura piena, che copre già l'originale. Nessun pixel ricostruito.
+- **⚠ Espansioni (f90–92, f96–98): sfondo RICOSTRUITO.** Con la card a misura di riposo si scoprirebbe
+  sfondo che nell'originale non compare in nessun frame. In quei 6 fotogrammi (0,4 s) la fascia tra
+  titolo e CTA è interpolata con flusso ottico tra i fotogrammi reali più vicini (89→93 e 95→99), su
+  tutta la larghezza e con bordo sfumato di 8 px, così non si vede il gradino del primo test. Titolo,
+  CTA con il suo pulse e disclaimer restano i pixel reali del frame. Sono stati tolti i residui arancio
+  trascinati dal flusso ottico, verificato a luminosità ×4. Tavola:
+  `TEST_v5_pulse_SNAI_eliminato_f89-99.png`.
+- Rispetto alla v4 cambiano **solo** i fotogrammi 90, 91, 92, 96, 97 e 98; il resto è identico bit per bit.
 
 ## Misure dopo la correzione (MP4 compresso)
 
@@ -84,8 +94,8 @@ Le card compaiono una alla volta, nella stessa posizione (262×228). Misure a ri
   dissolvenze d'ingresso originali (WH f43, bet365 f59–60, SNAI f80).
 - **Uscite di WH (f52–53) e bet365 (f68–69, glitch a blocchi):** la card nuova sfuma con l'opacità
   misurata pixel per pixel sull'originale, quindi senza fantasmi dei vecchi importi.
-- **Card ferme a riposo:** differenza **0** tra frame consecutivi, anche nei frame 93–95 e 99 dove
-  prima c'erano le contrazioni.
+- **Card ferme a riposo:** differenza **0** tra frame consecutivi, dal termine del conteggio all'uscita
+  (WH f47–51, bet365 f63–67, SNAI f84–115).
 - **Qualità:** PSNR tra distribuzione e master medio 39,0 dB, minimo 34,1 dB al f91 (card
   ingrandita).
 

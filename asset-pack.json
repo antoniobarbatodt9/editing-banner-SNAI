@@ -58,9 +58,9 @@
   "320x480": {
    "master_lossless": "09_rebuild_master/SNAI_BonusSport_320x480_CORRETTO_master_lossless_rgb.mkv",
    "distribuzione": "11_distribuzione/SNAI_BonusSport_320x480_CORRETTO.mp4",
-   "sha256_distribuzione": "6452a38d80d99775c9f809d26ecec5c421cfc0f0185935e19d7fe1782cf4569d",
+   "sha256_distribuzione": "1e5ccaefbe408e947c0515129842b3b6c5a655ead1f82e1896e3123701ab423f",
    "stato": "in attesa di approvazione",
-   "note": "card opache (originale semitrasparente, nessun dato di sfondo sotto le vecchie scritte); pulse: tolte le contrazioni, espansioni con ampiezza originale"
+   "note": "card opache; card SNAI senza pulse (v5): f90-92 e f96-98 con fascia di sfondo interpolata (inferred) tra frame reali; CTA con pulse originale"
   }
  },
  "assets": [
@@ -197,6 +197,7 @@
   "v2: SNAI logo -4 px, FINO A + importo +4 px.",
   "v3: text_2000.png sostituito con la versione pulita (main bd57228).",
   "160x600: timeline in scripts/formats/f160x600.py; FORMAT=160x600 per compose/qa/encode.",
-  "v4: conteggio degli importi ripristinato in 300x600, 160x600 e 320x480 (stessi valori e timing dell'originale)."
+  "v4: conteggio degli importi ripristinato in 300x600, 160x600 e 320x480 (stessi valori e timing dell'originale).",
+  "v5 (solo 320x480): eliminato il pulse della card SNAI; sfondo di 6 frame interpolato tra frame reali, dichiarato."
  ]
 }

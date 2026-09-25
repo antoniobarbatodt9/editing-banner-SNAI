@@ -240,8 +240,21 @@ def main(src_dir, out_dir):
         origp = np.pad(orig, ((PAD, PAD), (PAD, PAD), (0, 0)), mode='edge')
         if i in PULSE and i in PULSE_FLOW:
             fa, fb = PULSE_FLOW[i]; x0, y0, x1, y1 = PULSE[i]
-            I = flow_interp(load(fa), load(fb), (i - fa) / (fb - fa))
-            out[y0:y1 + 1, x0:x1 + 1] = I[y0:y1 + 1, x0:x1 + 1]
+            A_, B_ = load(fa), load(fb); t = (i - fa) / (fb - fa)
+            I = flow_interp(A_, B_, t)
+            lin = (1 - t) * A_ + t * B_
+            # pixel arancio trascinati dal flusso (titolo/CTA) dove nessuno dei due frame reali e' arancio
+            def orng(X, th=30): return (X[..., 0] > 50) & (X[..., 0] - X[..., 2] > th)
+            import cv2
+            bad = orng(I) & ~orng(A_, 20) & ~orng(B_, 20)
+            bad = cv2.dilate(bad.astype(np.uint8), np.ones((7, 7), np.uint8)).astype(bool)
+            I[bad] = lin[bad]
+            # fascia ricostruita con bordo sfumato (8 px) verso i pixel reali del frame
+            wy = np.ones(out.shape[0]); fe = 8
+            wy[:y0] = 0; wy[y1 + 1:] = 0
+            wy[y0:y0 + fe] = np.linspace(0, 1, fe); wy[y1 + 1 - fe:y1 + 1] = np.linspace(1, 0, fe)
+            wgt = wy[:, None, None]
+            out = out * (1 - wgt) + I * wgt
         elif i in PULSE:
             x0, y0, x1, y1 = PULSE[i]; w = (i - p0) / (p1 - p0)
             out[y0:y1 + 1, x0:x1 + 1] = (1 - w) * f81[y0:y1 + 1, x0:x1 + 1] + w * f93[y0:y1 + 1, x0:x1 + 1]
