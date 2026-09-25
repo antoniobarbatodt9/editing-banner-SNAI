@@ -12,7 +12,7 @@ import compose as C
 o_dir, m_dir, d_dir, lay_path, rep_path = sys.argv[1:6]
 L = lambda d, i: np.array(Image.open(f'{d}/{i:03d}.png').convert('RGB')).astype(float)
 lay = json.load(open(lay_path))['layout_per_frame']
-N = 135
+N = len([f for f in __import__("os").listdir(o_dir) if f.endswith(".png")])
 rep = {}
 
 # 1) fedelta' compressione: PSNR distribuzione vs master

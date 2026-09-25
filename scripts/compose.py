@@ -31,6 +31,8 @@ RADIUS = getattr(_cfg, 'RADIUS', 11.0)
 CARD_BORDER = np.array(getattr(_cfg, 'CARD_BORDER', A.CARD_BORDER))
 NUDGE = getattr(_cfg, 'NUDGE', {})
 EXIT_ALPHA = getattr(_cfg, 'EXIT_ALPHA', {})
+PULSE_FLOW = getattr(_cfg, 'PULSE_FLOW', {})      # {frame: (frame_reale_prima, frame_reale_dopo)} -> interpolazione con flusso ottico
+UNMIX = getattr(_cfg, 'UNMIX', {})                # {frame: frame_di_riposo} -> dissolvenza/glitch: opacita' stimata pixel per pixel
 
 def _asset(rgb, a):
     """le misure si riferiscono all'ingombro pieno (alpha > 50%): l'alone semitrasparente
@@ -125,15 +127,48 @@ def render_card(card, spec):
     return region, pm_d, al_d, L
 
 
+
+def flow_interp(A, B, t):
+    """frame intermedio tra due frame REALI A e B (t in 0..1) con flusso ottico bidirezionale (DIS)."""
+    import cv2
+    ga = cv2.cvtColor(A.astype(np.uint8), cv2.COLOR_RGB2GRAY); gb = cv2.cvtColor(B.astype(np.uint8), cv2.COLOR_RGB2GRAY)
+    dis = cv2.DISOpticalFlow_create(cv2.DISOPTICAL_FLOW_PRESET_MEDIUM)
+    fab = dis.calc(ga, gb, None); fba = dis.calc(gb, ga, None)
+    h, w = ga.shape; X, Y = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
+    wa = cv2.remap(A.astype(np.float32), X - t * fab[..., 0], Y - t * fab[..., 1], cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    wb = cv2.remap(B.astype(np.float32), X - (1 - t) * fba[..., 0], Y - (1 - t) * fba[..., 1], cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    return (1 - t) * wa + t * wb
+
+
+def local_opacity(orig, rest, win=15):
+    """opacita' locale della card originale: regressione passa-alto (orig vs frame di riposo) su finestre."""
+    from scipy.ndimage import gaussian_filter, uniform_filter
+    o = orig.mean(-1); r = rest.mean(-1)
+    ho = o - gaussian_filter(o, 2); hr = r - gaussian_filter(r, 2)
+    num = uniform_filter(ho * hr, win); den = uniform_filter(hr * hr, win)
+    k = np.where(den > 4, num / np.maximum(den, 1e-6), np.nan)
+    # dove non c'e' testo per stimare, prende la mediana delle finestre valide vicine
+    valid = ~np.isnan(k)
+    kg = np.nanmedian(k) if valid.any() else 0.0
+    kf = np.where(valid, k, kg)
+    w = uniform_filter(valid.astype(float), 41); kk = uniform_filter(np.where(valid, k, 0), 41)
+    kf = np.where(valid, k, np.where(w > 0.05, kk / np.maximum(w, 1e-6), kg))
+    return np.clip(gaussian_filter(kf, 2), 0, 1)
+
+
 def main(src_dir, out_dir):
     os.makedirs(out_dir, exist_ok=True)
     load = lambda i: np.array(Image.open(os.path.join(src_dir, f'{i:03d}.png')).convert('RGB')).astype(float)
     n = len([f for f in os.listdir(src_dir) if f.endswith('.png')])
-    p0, p1 = PULSE_SRC; f81, f93 = load(p0), load(p1)
+    p0, p1 = PULSE_SRC if PULSE_SRC else (1, 1); f81, f93 = load(p0), load(p1)
     report = {}
     for i in range(1, n + 1):
         orig = load(i); out = orig.copy()
-        if i in PULSE:
+        if i in PULSE and i in PULSE_FLOW:
+            fa, fb = PULSE_FLOW[i]; x0, y0, x1, y1 = PULSE[i]
+            I = flow_interp(load(fa), load(fb), (i - fa) / (fb - fa))
+            out[y0:y1 + 1, x0:x1 + 1] = I[y0:y1 + 1, x0:x1 + 1]
+        elif i in PULSE:
             x0, y0, x1, y1 = PULSE[i]; w = (i - p0) / (p1 - p0)
             out[y0:y1 + 1, x0:x1 + 1] = (1 - w) * f81[y0:y1 + 1, x0:x1 + 1] + w * f93[y0:y1 + 1, x0:x1 + 1]
         a = EXIT_ALPHA.get(i, 1.0)
@@ -142,7 +177,14 @@ def main(src_dir, out_dir):
             region, pm, al, L = render_card(card, spec)
             rx0, ry0, rx1, ry1 = region
             sl = (slice(ry0, ry1 + 1), slice(rx0, rx1 + 1))
-            if a >= 1.0:
+            if i in UNMIX:
+                # dissolvenza/glitch d'uscita: contenuto finale identico al riposo -> si toglie la card
+                # originale con la sua opacita' locale e si mette la nuova con la stessa opacita'
+                R = load(UNMIX[i])[sl]
+                km = local_opacity(orig[sl], R)[..., None]
+                Knew = R * (1 - al[..., None]) + pm                    # card nuova composta sul riposo
+                out[sl] = orig[sl] + km * (Knew - R)
+            elif a >= 1.0:
                 out[sl] = out[sl] * (1 - al[..., None]) + pm
             else:
                 # uscita: nel master le card sfumano verso il nero (misurato: sotto la card il fondo
