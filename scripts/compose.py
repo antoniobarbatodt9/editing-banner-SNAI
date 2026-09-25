@@ -33,7 +33,8 @@ NUDGE = getattr(_cfg, 'NUDGE', {})
 EXIT_ALPHA = getattr(_cfg, 'EXIT_ALPHA', {})
 PULSE_FLOW = getattr(_cfg, 'PULSE_FLOW', {})      # {frame: (frame_reale_prima, frame_reale_dopo)} -> interpolazione con flusso ottico
 UNMIX = getattr(_cfg, 'UNMIX', {})
-PULSE_KEEP = getattr(_cfg, 'PULSE_KEEP', [])      # rettangoli che restano pixel reali dentro la fascia interpolata
+PULSE_KEEP = getattr(_cfg, 'PULSE_KEEP', [])
+CUT_DENOISE = getattr(_cfg, 'CUT_DENOISE', False)  # pulizia dei ritagli del conteggio nei frame in dissolvenza      # rettangoli che restano pixel reali dentro la fascia interpolata
 COUNT = getattr(_cfg, 'COUNT', {})                # {frame: {card: frame_originale}} -> valore intermedio del conteggio                # {frame: frame_di_riposo} -> dissolvenza/glitch: opacita' stimata pixel per pixel
 
 def _asset(rgb, a):
@@ -166,6 +167,11 @@ def cut_amount(src_frame, card, ref_frame=None):
     peak = np.percentile(v, 97)
     a = np.clip((v - bg) / max(peak - bg, 1), 0, 1)
     a = np.where(a < 0.08, 0, a)
+    if CUT_DENOISE and ref_frame is not None:
+        # frame in dissolvenza con sfondo che traspare: soglia piu' alta + apertura morfologica
+        import cv2
+        a = np.clip((a - 0.3) / 0.6, 0, 1)
+        a = a * cv2.morphologyEx((a > 0.2).astype(np.uint8), cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
     col = A.ORANGE_AMOUNT if orange else A.WHITE
     res = _asset(np.broadcast_to(np.array(col, float), a.shape + (3,)).copy(), a)
     res['h'] = y1 - y0 + 1 if ref_frame is None else y1 - y0 - 1      # altezza d'inchiostro = altezza del simbolo EUR
@@ -241,8 +247,11 @@ def main(src_dir, out_dir):
         origp = np.pad(orig, ((PAD, PAD), (PAD, PAD), (0, 0)), mode='edge')
         if i in PULSE and i in PULSE_FLOW:
             fa, fb = PULSE_FLOW[i]; x0, y0, x1, y1 = PULSE[i]
-            A_, B_ = load(fa), load(fb); t = (i - fa) / (fb - fa)
-            I = flow_interp(A_, B_, t)
+            A_, B_ = load(fa), load(fb)
+            if fa == fb:                                   # copia diretta di un frame reale vicino
+                t = 0.0; I = A_.copy()
+            else:
+                t = (i - fa) / (fb - fa); I = flow_interp(A_, B_, t)
             lin = (1 - t) * A_ + t * B_
             # pixel arancio trascinati dal flusso (titolo/CTA) dove nessuno dei due frame reali e' arancio
             def orng(X, th=30): return (X[..., 0] > 50) & (X[..., 0] - X[..., 2] > th)
@@ -255,7 +264,10 @@ def main(src_dir, out_dir):
             wy[:y0] = 0; wy[y1 + 1:] = 0
             if y0 > 0: wy[y0:y0 + fe] = np.linspace(0, 1, fe)             # niente sfumatura sul bordo del banner
             if y1 < out.shape[0] - 1: wy[y1 + 1 - fe:y1 + 1] = np.linspace(1, 0, fe)
-            wgt = np.repeat(wy[:, None], out.shape[1], 1)
+            wx = np.ones(out.shape[1]); wx[:x0] = 0; wx[x1 + 1:] = 0
+            if x0 > 0: wx[x0:x0 + fe] = np.linspace(0, 1, fe)
+            if x1 < out.shape[1] - 1: wx[x1 + 1 - fe:x1 + 1] = np.linspace(1, 0, fe)
+            wgt = wy[:, None] * wx[None, :]
             for kx0, ky0, kx1, ky1 in PULSE_KEEP:
                 # es. CTA: resta il pixel reale del frame, ma solo sulla sua sagoma (pixel arancio del frame,
                 # dilatati di 2 px per il bordo AA), non su un rettangolo che includerebbe il bordo della card
