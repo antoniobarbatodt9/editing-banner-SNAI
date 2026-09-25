@@ -46,19 +46,19 @@
   "300x600": {
    "master_lossless": "09_rebuild_master/SNAI_BonusSport_300x600_CORRETTO_master_lossless_rgb.mkv",
    "distribuzione": "11_distribuzione/SNAI_BonusSport_300x600_CORRETTO.mp4",
-   "sha256_distribuzione": "393d4907d2e20bb58fcf1b46d31ede6ae39dbbcc3a381aa3a483a72c26371199",
+   "sha256_distribuzione": "1d9c690932ba56253c0acffcd91468729157900a56e716e8e22dc6dde8a8a76f",
    "stato": "approvato"
   },
   "160x600": {
    "master_lossless": "09_rebuild_master/SNAI_BonusSport_160x600_CORRETTO_master_lossless_rgb.mkv",
    "distribuzione": "11_distribuzione/SNAI_BonusSport_160x600_CORRETTO.mp4",
-   "sha256_distribuzione": "cd9654cd9a705f6aa61d441ef91774e5336fa2ffd4b30fd0a1f3ed70b956b3d5",
+   "sha256_distribuzione": "6df31aeaccb1dde8c4e1df0d14f5b1c1a5ce73b205ee9ba2c47d9bb0888628cf",
    "stato": "approvato"
   },
   "320x480": {
    "master_lossless": "09_rebuild_master/SNAI_BonusSport_320x480_CORRETTO_master_lossless_rgb.mkv",
    "distribuzione": "11_distribuzione/SNAI_BonusSport_320x480_CORRETTO.mp4",
-   "sha256_distribuzione": "37ea54b74a5c844d4dc6ef51925469fa5f4332e7459e6be022b1a7b68e8c7fcf",
+   "sha256_distribuzione": "6452a38d80d99775c9f809d26ecec5c421cfc0f0185935e19d7fe1782cf4569d",
    "stato": "in attesa di approvazione",
    "note": "card opache (originale semitrasparente, nessun dato di sfondo sotto le vecchie scritte); pulse: tolte le contrazioni, espansioni con ampiezza originale"
   }
@@ -168,6 +168,21 @@
    "status": "in uso (outlined)",
    "z_index": 3,
    "quality_notes": "usata la sola alpha; colore campionato dal master; scala uniforme, ridimensionamento in riduzione"
+  },
+  {
+   "id": "text_importi_conteggio",
+   "name": "Valori intermedi del conteggio",
+   "class": "T",
+   "source_type": "ritaglio dai fotogrammi originali di ciascun formato (font del video)",
+   "source_file": "00_master_approvato/*_MASTER*.mp4 (frame elencati in scripts/formats/f*.py, COUNT)",
+   "output_file": null,
+   "role": "conteggio progressivo degli importi",
+   "editable": false,
+   "official": false,
+   "inferred": false,
+   "status": "in uso; sostituibile con cifre 0-9 ufficiali se fornite",
+   "z_index": 3,
+   "quality_notes": "solo riduzione o scala 1:1; alpha stimata sul fondo card; stile leggermente diverso dall'asset pulito del valore finale"
   }
  ],
  "approvals": {
@@ -181,6 +196,7 @@
   "Vedi REPORT_300x600.md e 10_qa/qa_report.json.",
   "v2: SNAI logo -4 px, FINO A + importo +4 px.",
   "v3: text_2000.png sostituito con la versione pulita (main bd57228).",
-  "160x600: timeline in scripts/formats/f160x600.py; FORMAT=160x600 per compose/qa/encode."
+  "160x600: timeline in scripts/formats/f160x600.py; FORMAT=160x600 per compose/qa/encode.",
+  "v4: conteggio degli importi ripristinato in 300x600, 160x600 e 320x480 (stessi valori e timing dell'originale)."
  ]
 }

@@ -25,6 +25,32 @@ Tutte le misure qui sotto sono prese sul **file MP4 compresso finale**, decodifi
 
 ---
 
+## Conteggio degli importi ripristinato (v4)
+
+Il conteggio progressivo dell'originale era stato tolto per errore. L'istruzione di togliere le oscillazioni
+riguardava solo il rimbalzo di scala (il pulse), non il conteggio. Ora è ripristinato con **gli stessi valori
+e lo stesso timing dell'originale**, fotogramma per fotogramma, alla nuova dimensione uniforme delle cifre.
+Il conteggio finisce sempre **prima** che parta il pulse.
+
+| Operatore | Sequenza originale (un valore per frame) |
+|---|---|
+| William Hill | f43 68 · f44 80 · f45 100 → 105 da f46 |
+| bet365 | f52 900 · f53 878 · f54 648 → 500 da f55 |
+| SNAI | f67 546 · f68 784 · f69 975 · f70 1.214 · f71 1.282 · f72 1.401 · f73 1.476 → 2.000 da f74 (pulse da f82). A f66 il valore originale non si legge: uso il primo, 546 |
+
+- **Font:** gli asset forniti contengono solo 0, 1, 2, 5, il punto e €; le cifre 3, 4, 6, 7, 8 e 9 non ci
+  sono. Ogni valore intermedio è quindi **ritagliato dal fotogramma originale** in cui compare (stesso font
+  e stessa spaziatura del video), portato all'altezza uniforme nuova (sempre in riduzione o a parità, mai
+  ingrandito) e centrato sulla posizione del valore finale, come nell'originale. "FINO A" resta fermo.
+  Nei frame in dissolvenza la posizione del numero è presa dal frame leggibile vicino.
+- **Differenza di stile nel passaggio al valore finale:** il valore finale è l'asset pulito fornito, un
+  po' più grassetto e più inclinato del font del video. Nel passaggio dall'ultimo valore intermedio al
+  finale la differenza è percepibile. Se fornite le cifre 0–9 nello stile dell'asset pulito, ricompongo i
+  valori intermedi con quelle.
+- **Tutto il resto invariato:** fuori dai frame del conteggio il master è identico bit per bit alla
+  versione già consegnata (verificato frame per frame).
+- **Tavola:** `06_conteggio_ripristinato.png`, originale sopra, MP4 corretto sotto.
+
 ## 1. Principio adottato: nessuna modifica al video originale fuori dalle card
 
 - Fuori dalle card nuove ogni pixel è quello originale: sfondo, titolo, CTA con il suo pulse, disclaimer 18+/ADM.
@@ -64,9 +90,9 @@ Sono le stesse proporzioni della fase a tre card, scalate di 1,31×.
 
 | Elemento | Prima | Dopo |
 |---|---|---|
-| Importo WH (f43–46) | conta 68 → 80 → … → 105 | 105 € fin dal primo frame visibile |
-| Importo bet365 (f52–54) | parte da 900, poi 878, 648, fino a 500 | 500 €, con la stessa dissolvenza d'ingresso |
-| Importo SNAI (f66–76) | conta 300 → 546 → 784 → … → 2.000 | 2.000 €, con la stessa dissolvenza d'ingresso |
+| Importo WH (f43–46) | conta 68 → 80 → … → 105 | conteggio **ripristinato** (v4), alla nuova dimensione |
+| Importo bet365 (f52–54) | parte da 900, poi 878, 648, fino a 500 | conteggio **ripristinato** (v4), alla nuova dimensione |
+| Importo SNAI (f67–74) | conta 546 → 784 → … → 2.000 | conteggio **ripristinato** (v4), alla nuova dimensione |
 | Card SNAI (f82–92) | pulse 1,27× → 0,85× → 1,1× → 1,0 | ferma |
 | Card, loghi e testi dopo l'ingresso | — | identici da un frame all'altro: sul master la differenza massima tra frame consecutivi è **0** per tutte le card |
 | CTA "SCOPRI DI PIÙ" | pulse | **invariato**: sono i pixel originali |
@@ -78,8 +104,8 @@ Riferimento: nell'originale, durante il pulse, lo stesso riquadro SNAI varia in 
 - **`02_ex_pulse_SNAI_f80-93.png`**, prima, durante e dopo il vecchio pulse (f80, 82, 83, 84, 86, 87, 89,
   91, 93): card SNAI ferma. L'anello riempito non mostra bordi né cuciture anche con la luminosità
   aumentata di 4 volte (controllo fatto a 4×).
-- **`03_ingressi_senza_contatori.png`**: gli importi compaiono subito al valore finale; le dissolvenze
-  d'ingresso originali sono conservate (bet365 f52–53, SNAI f66–67).
+- **`03_ingressi_conteggio.png`** e **`06_conteggio_ripristinato.png`**: conteggio originale ripristinato
+  alla nuova dimensione; le dissolvenze d'ingresso originali sono conservate (bet365 f52–53, SNAI f66–67).
 - **`04_transizione_fase2_fase3.png`** (f62–70): le card si restringono e si spostano in modo monotono
   (senza rimbalzo) e coprono sempre quelle originali. Controllo automatico: nessun pixel di card
   originale visibile fuori dalle nuove nei frame 43–64. Dal f70 lo sfondo nero ha lo stesso colore delle

@@ -46,6 +46,11 @@ CONTENT = {'bet365': ('500€', A.WHITE), 'wh': ('105€', A.WHITE), 'snai': ('2
 H_LOGO, H_FINO, H_AMT, G1, G2 = 41.0, 16.0, 57.0, 17.0, 7.0
 NUDGE = {}                               # card tutte uguali: nessun ritocco specifico SNAI
 
+# conteggio originale degli importi (valore intermedio ritagliato dal fotogramma originale indicato)
+COUNT = {43: {'wh': 43}, 44: {'wh': 44}, 45: {'wh': 45}, 46: {'wh': 46},
+         59: {'bet365': 60}, 60: {'bet365': 60}, 61: {'bet365': 61}, 62: {'bet365': 62},
+         80: {'snai': 80}, 81: {'snai': 81}, 82: {'snai': 82}, 83: {'snai': 83}}
+
 # QA
 QA_CTA_ROWS = (360, 414)
 QA_REST = (49, 65, 85)
@@ -53,6 +58,6 @@ QA_STAB = [('wh', 44, 51), ('bet365', 61, 67), ('snai', 81, 89), ('snai', 93, 95
 QA_PULSE_ORIG = (89, 100)
 QA_SHEETS = [((49, 65, 85), '01_riposo_per_card', 'Fotogrammi di riposo: WH (f49), bet365 (f65), SNAI (f85)', (0, 0, 320, 480), 1.0),
              ((89, 90, 91, 92, 93, 95, 96, 97, 98, 99), '02_ex_pulse_SNAI_f90-99', 'Pulse SNAI: restano solo le espansioni (f90-92, f96-98), tolte le contrazioni (f93-95, f99)', (0, 60, 320, 380), 0.8),
-             ((42, 43, 44, 58, 59, 60, 61, 79, 80, 81), '03_ingressi_senza_contatori', 'Ingressi: importi subito al valore finale', (0, 90, 320, 350), 0.6),
+             ((42, 43, 44, 58, 59, 60, 61, 79, 80, 81), '03_ingressi_conteggio', 'Ingressi: conteggio originale ripristinato, cifre alla nuova dimensione uniforme', (0, 90, 320, 350), 0.6),
              ((51, 52, 53, 54, 67, 68, 69, 70), '04_uscite', 'Uscite WH e bet365: stessa dissolvenza/glitch dell\'originale', (0, 90, 320, 350), 0.6),
              ((114, 115, 116, 117, 118), '05_finale', 'Finale', (0, 0, 320, 480), 0.8)]

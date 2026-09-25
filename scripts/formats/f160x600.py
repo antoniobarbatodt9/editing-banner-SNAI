@@ -46,6 +46,14 @@ CONTENT = {'bet365': ('500€', A.WHITE), 'wh': ('105€', A.WHITE), 'snai': ('2
 H_LOGO, H_FINO, H_AMT, G1, G2 = 20.0, 9.0, 34.0, 6.0, 2.0
 NUDGE = {'snai': (-3, +3)}   # come nel 300x600 approvato: logo SNAI piu' su, FINO A + 2.000EUR piu' giu'
 
+# conteggio originale degli importi (valore intermedio ritagliato dal fotogramma originale indicato)
+COUNT = {f: {'wh': f} for f in range(52, 59)}
+COUNT[52] = {'wh': (52, 54)}; COUNT[53] = {'wh': (53, 54)}
+COUNT.update({f: {'bet365': f} for f in range(73, 81)})
+COUNT[73] = {'bet365': (73, 75)}; COUNT[74] = {'bet365': (74, 75)}
+COUNT.update({f: {'snai': f} for f in range(100, 106)})
+COUNT[100] = {'snai': (100, 101)}
+
 # QA
 QA_CTA_ROWS = (478, 516)
 QA_REST = (60, 85, 110)
@@ -54,6 +62,6 @@ QA_STAB = [('snai', 102, 115), ('snai', 127, 135), ('bet365', 75, 97), ('bet365'
 QA_PULSE_ORIG = (115, 127)
 QA_SHEETS = [((60, 85, 110), '01_riposo_per_fase', 'Fotogrammi di riposo: WH solo (f60), bet365+WH (f85), tre card (f110)', (0, 0, 160, 600), 1.0),
              ((114, 116, 117, 118, 119, 121, 124, 126, 128), '02_ex_pulse_SNAI_f116-126', 'Prima / durante / dopo il vecchio pulse SNAI (f116-126)', (0, 180, 160, 400), 1.0),
-             ((52, 53, 56, 73, 74, 78, 100, 101, 104), '03_ingressi_senza_contatori', 'Ingressi: importi subito al valore finale (niente conteggio / niente 900->500)', (0, 90, 160, 480), 0.8),
+             ((52, 53, 56, 73, 74, 78, 100, 101, 104), '03_ingressi_conteggio', 'Ingressi: conteggio originale ripristinato, cifre alla nuova dimensione uniforme', (0, 90, 160, 480), 0.8),
              ((96, 97, 98, 99, 100, 101), '04_transizione_fase2_fase3', 'Transizione verso le tre card: le card nuove coprono sempre le originali', (0, 90, 160, 480), 0.8),
              ((130, 133, 135), '05_finale', 'Finale (nessuna uscita nel 160x600)', (0, 0, 160, 600), 1.0)]

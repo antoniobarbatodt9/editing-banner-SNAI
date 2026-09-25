@@ -13,13 +13,39 @@
 | Tavole QA | `10_qa/320x480/01…05_*.png`; misure in `10_qa/320x480/qa_report.json` |
 | Test della ricostruzione del pulse, scartata | `10_qa/320x480/TEST_pulse_ricostruzione_f89-99.png` |
 
+## Conteggio degli importi ripristinato (v4)
+
+Il conteggio progressivo dell'originale era stato tolto per errore. L'istruzione di togliere le oscillazioni
+riguardava solo il rimbalzo di scala (il pulse), non il conteggio. Ora è ripristinato con **gli stessi valori
+e lo stesso timing dell'originale**, fotogramma per fotogramma, alla nuova dimensione uniforme delle cifre.
+Il conteggio finisce sempre **prima** che parta il pulse.
+
+| Operatore | Sequenza originale (un valore per frame) |
+|---|---|
+| William Hill | f43 74 · f44 86 · f45 100 · f46 104 → 105 da f47 |
+| bet365 | f60 680 · f61 570 · f62 530 → 500 da f63; a f59, dove la cifra originale non si legge, uso 680 |
+| SNAI | f80 960 · f81 1.210 · f82 1.410 · f83 1.470 → 2.000 da f84 (pulse da f89/90) |
+
+- **Font:** gli asset forniti contengono solo 0, 1, 2, 5, il punto e €; le cifre 3, 4, 6, 7, 8 e 9 non ci
+  sono. Ogni valore intermedio è quindi **ritagliato dal fotogramma originale** in cui compare (stesso font
+  e stessa spaziatura del video), portato all'altezza uniforme nuova (sempre in riduzione o a parità, mai
+  ingrandito) e centrato sulla posizione del valore finale, come nell'originale. "FINO A" resta fermo.
+  Nei frame in dissolvenza la posizione del numero è presa dal frame leggibile vicino.
+- **Differenza di stile nel passaggio al valore finale:** il valore finale è l'asset pulito fornito, un
+  po' più grassetto e più inclinato del font del video. Nel passaggio dall'ultimo valore intermedio al
+  finale la differenza è percepibile. Se fornite le cifre 0–9 nello stile dell'asset pulito, ricompongo i
+  valori intermedi con quelle.
+- **Tutto il resto invariato:** fuori dai frame del conteggio il master è identico bit per bit alla
+  versione già consegnata (verificato frame per frame).
+- **Tavola:** `06_conteggio_ripristinato.png`, originale sopra, MP4 corretto sotto.
+
 ## ⚠ Differenza intenzionale: card rese OPACHE
 
 Nell'originale le card sono **semitrasparenti**: attraverso la card si vedono la rete e il pallone
 in movimento, circa al 15–20%. Nella versione corretta le card sono **opache**, nel tono della card
 originale (fondo 22/22/24, bordo 49/48/52).
 
-**Motivazione:** per togliere i contatori e uniformare logo, "FINO A" e importi bisogna eliminare le
+**Motivazione:** per uniformare logo, "FINO A" e importi bisogna eliminare le
 vecchie scritte. Sotto quelle scritte non c'è **nessun dato di sfondo disponibile**: in quei punti,
 in quei frame, lo sfondo non compare mai. Mantenere la trasparenza avrebbe richiesto di inventare il
 velo di rete sotto il testo. Una card opaca invece copre per intero la card originale, quindi non si
@@ -54,8 +80,8 @@ Le card compaiono una alla volta, nella stessa posizione (262×228). Misure a ri
 
 - **Fuori dalle card nessun pixel toccato:** titolo, CTA con il suo pulse, sfondo e disclaimer sono
   identici all'originale (differenza massima **0** sul master, 1,8 livelli medi sulla distribuzione).
-- **Importi al valore finale da subito**, con le dissolvenze d'ingresso originali: WH f43,
-  bet365 f59–60, SNAI f80. Non ci sono più i conteggi 74→105, 680→500 e 960→2.000.
+- **Importi:** conteggio originale ripristinato (v4: 74→105, 680→500, 960→2.000), con le
+  dissolvenze d'ingresso originali (WH f43, bet365 f59–60, SNAI f80).
 - **Uscite di WH (f52–53) e bet365 (f68–69, glitch a blocchi):** la card nuova sfuma con l'opacità
   misurata pixel per pixel sull'originale, quindi senza fantasmi dei vecchi importi.
 - **Card ferme a riposo:** differenza **0** tra frame consecutivi, anche nei frame 93–95 e 99 dove

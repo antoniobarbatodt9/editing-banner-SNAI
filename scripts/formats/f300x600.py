@@ -41,6 +41,12 @@ H_LOGO, H_FINO, H_AMT, G1, G2 = 21.0, 10.0, 39.0, 8.0, 3.0
 NUDGE = {'snai': (-4, +4)}   # SNAI: logo 4 px piu' su, FINO A + 2.000EUR 4 px piu' giu'
 
 
+# conteggio originale degli importi (valore intermedio ritagliato dal fotogramma originale indicato)
+COUNT = {43: {'wh': 43}, 44: {'wh': 44}, 45: {'wh': 45},
+         52: {'bet365': (52, 54)}, 53: {'bet365': (53, 54)}, 54: {'bet365': 54},
+         66: {'snai': 67}, 67: {'snai': 67}, 68: {'snai': 68}, 69: {'snai': 69}, 70: {'snai': 70},
+         71: {'snai': 71}, 72: {'snai': 72}, 73: {'snai': 73}}
+
 # QA
 QA_CTA_ROWS = (505, 548)
 QA_REST = (47, 60, 100)
@@ -48,6 +54,6 @@ QA_STAB = [('snai', 68, 123), ('bet365', 54, 63), ('bet365', 67, 123), ('wh', 43
 QA_PULSE_ORIG = (81, 93)
 QA_SHEETS = [((47, 60, 100), '01_riposo_per_fase', 'Fotogrammi di riposo: WH solo (f47), bet365+WH (f60), tre card (f100)', (0, 0, 300, 600), 1.0),
              ((80, 82, 83, 84, 86, 87, 89, 91, 93), '02_ex_pulse_SNAI_f80-93', 'Prima / durante / dopo il vecchio pulse SNAI (f82-92)', (20, 160, 280, 400), 1.0),
-             ((43, 44, 46, 52, 53, 54, 66, 67, 68, 76), '03_ingressi_senza_contatori', 'Ingressi: importi subito al valore finale (niente conteggio / niente 900->500)', (40, 100, 260, 500), 0.8),
+             ((43, 44, 46, 52, 53, 54, 66, 67, 68, 76), '03_ingressi_conteggio', 'Ingressi: conteggio originale ripristinato, cifre alla nuova dimensione uniforme', (40, 100, 260, 500), 0.8),
              ((62, 63, 64, 65, 66, 67, 70), '04_transizione_fase2_fase3', 'Transizione verso le tre card: le card nuove coprono sempre le originali', (40, 60, 260, 520), 0.8),
              ((122, 123, 124, 125, 126, 127), '05_uscita', "Uscita: stessa curva di dissolvenza misurata sull'originale (a=0.95/0.52/0.26)", (40, 60, 260, 520), 0.8)]

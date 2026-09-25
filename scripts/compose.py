@@ -32,7 +32,8 @@ CARD_BORDER = np.array(getattr(_cfg, 'CARD_BORDER', A.CARD_BORDER))
 NUDGE = getattr(_cfg, 'NUDGE', {})
 EXIT_ALPHA = getattr(_cfg, 'EXIT_ALPHA', {})
 PULSE_FLOW = getattr(_cfg, 'PULSE_FLOW', {})      # {frame: (frame_reale_prima, frame_reale_dopo)} -> interpolazione con flusso ottico
-UNMIX = getattr(_cfg, 'UNMIX', {})                # {frame: frame_di_riposo} -> dissolvenza/glitch: opacita' stimata pixel per pixel
+UNMIX = getattr(_cfg, 'UNMIX', {})
+COUNT = getattr(_cfg, 'COUNT', {})                # {frame: {card: frame_originale}} -> valore intermedio del conteggio                # {frame: frame_di_riposo} -> dissolvenza/glitch: opacita' stimata pixel per pixel
 
 def _asset(rgb, a):
     """le misure si riferiscono all'ingombro pieno (alpha > 50%): l'alone semitrasparente
@@ -112,7 +113,67 @@ def layout(card, box, k):
             'amount': (amt_x, y_amt, ha, aw)}
 
 
-def render_card(card, spec):
+
+SRC_DIR = None
+_cut_cache = {}
+def _amount_mask(img, box, orange):
+    import cv2
+    x0, y0, x1, y1 = box
+    ox, oy = max(0, x0 + 4), max(0, y0 + 4)
+    sub = img[oy:y1 - 3, ox:x1 - 3]
+    v = sub[..., 0] if orange else sub.min(-1)            # arancio: canale R; bianco: minimo dei canali
+    if orange: v = np.where(sub[..., 2] < sub[..., 0] * 0.6, v, np.minimum(v, sub.mean(-1)))
+    bg = np.median(v[v < np.percentile(v, 60)])
+    m = (v - bg) > 0.35 * (np.percentile(v, 99.7) - bg)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(m.astype(np.uint8))
+    comps = [(k, *st[k]) for k in range(1, n) if st[k][4] >= 4]
+    Hm = max(c[4] for c in comps)
+    tall = [c for c in comps if c[4] >= 0.45 * Hm]
+    low = max(c[2] + c[4] for c in tall)                  # riga di testo piu' in basso = importo
+    row = [c for c in tall if abs(c[2] + c[4] - low) <= 0.12 * Hm]
+    eur = max(row, key=lambda c: c[1] + c[3])             # il suo carattere piu' a destra = simbolo EUR
+    H = eur[4]; base = eur[2] + eur[4]
+    keep = [c for c in comps if abs(c[2] + c[4] - base) <= max(2, 0.08 * H) and c[1] + c[3] <= eur[1] + eur[3] + 1]
+    km = np.isin(lab, [c[0] for c in keep]); km[:max(0, base - H - 1)] = False   # via "FINO A" attaccato sopra
+    ys, xs = np.where(km)
+    return v, bg, (xs.min() + ox, base - H + oy, xs.max() + ox, base - 1 + oy)
+
+
+def cut_amount(src_frame, card, ref_frame=None):
+    """Ritaglia l'importo intermedio del conteggio dal fotogramma ORIGINALE in cui compare (stesso font
+    del video: le cifre 3,4,6,7,8,9 non esistono tra gli asset forniti). Nei frame in dissolvenza la
+    posizione del numero si prende da un frame vicino ben leggibile (ref_frame). Restituisce un asset
+    come _asset(): copertura stimata sul fondo della card, colore = colore campionato del master."""
+    key = (src_frame, card, ref_frame)
+    if key in _cut_cache: return _cut_cache[key]
+    load = lambda f: np.array(Image.open(os.path.join(SRC_DIR, f'{f:03d}.png')).convert('RGB')).astype(float)
+    orange = card == 'snai'
+    img = load(src_frame)
+    if ref_frame is None:
+        _, _, bb = _amount_mask(img, TL[src_frame][card]['box'], orange)
+    else:
+        _, _, bb = _amount_mask(load(ref_frame), TL[ref_frame][card]['box'], orange)
+        bb = (bb[0] - 6, bb[1] - 1, bb[2] + 6, bb[3] + 1)
+    x0, y0, x1, y1 = bb
+    sub = img[y0:y1 + 1, x0:x1 + 1]
+    v = sub[..., 0] if orange else sub.min(-1)
+    if orange: v = np.where(sub[..., 2] < sub[..., 0] * 0.6, v, np.minimum(v, sub.mean(-1)))
+    x0c, y0c, x1c, y1c = TL[src_frame][card]['box']
+    card_px = img[y0c + 4:y1c - 3, x0c + 4:x1c - 3]
+    cv_ = card_px[..., 0] if orange else card_px.min(-1)
+    bg = np.median(cv_[cv_ < np.percentile(cv_, 60)])
+    peak = np.percentile(v, 97)
+    a = np.clip((v - bg) / max(peak - bg, 1), 0, 1)
+    a = np.where(a < 0.08, 0, a)
+    col = A.ORANGE_AMOUNT if orange else A.WHITE
+    res = _asset(np.broadcast_to(np.array(col, float), a.shape + (3,)).copy(), a)
+    res['h'] = y1 - y0 + 1 if ref_frame is None else y1 - y0 - 1      # altezza d'inchiostro = altezza del simbolo EUR
+    res['top'] = 0 if ref_frame is None else 1
+    _cut_cache[key] = res
+    return res
+
+
+def render_card(card, spec, frame=None):
     box, k, ca = spec['box'], spec['k'], spec['ca']
     region = (box[0] - 2, box[1] - 2, box[2] + 2, box[3] + 2)
     pm, al, _ = card_layer(box, k, ca, region)
@@ -120,7 +181,17 @@ def render_card(card, spec):
     ox, oy = region[0], region[1]
     x, y, h, _ = L['logo']; place(pm, al, ('logo', card), _logo[card], x, y, h, ox, oy, ca)
     x, y, h = L['fino']; place(pm, al, ('fino',), _fino, x, y, h, ox, oy, ca)
-    x, y, h, _ = L['amount']; place(pm, al, ('amt', card), _amt[card], x, y, h, ox, oy, ca)
+    x, y, h, aw = L['amount']
+    if frame in COUNT and card in COUNT[frame]:
+        # valore intermedio: stessa altezza e stesso centro del valore finale, "FINO A" fermo
+        src = COUNT[frame][card]; ref = None
+        if isinstance(src, tuple): src, ref = src
+        ast = cut_amount(src, card, ref)
+        w2 = ast['w'] * h / ast['h']
+        place(pm, al, ('cut', src, card), ast, x + aw / 2 - w2 / 2, y, h, ox, oy, ca)
+        L = dict(L); L['amount'] = (x + aw / 2 - w2 / 2, y, h, w2)
+    else:
+        place(pm, al, ('amt', card), _amt[card], x, y, h, ox, oy, ca)
     Hh, Ww = al.shape
     pm_d = pm.reshape(Hh // S, S, Ww // S, S, 3).mean((1, 3))
     al_d = al.reshape(Hh // S, S, Ww // S, S).mean((1, 3))
@@ -157,6 +228,7 @@ def local_opacity(orig, rest, win=15):
 
 
 def main(src_dir, out_dir):
+    global SRC_DIR; SRC_DIR = src_dir
     os.makedirs(out_dir, exist_ok=True)
     load = lambda i: np.array(Image.open(os.path.join(src_dir, f'{i:03d}.png')).convert('RGB')).astype(float)
     n = len([f for f in os.listdir(src_dir) if f.endswith('.png')])
@@ -176,7 +248,7 @@ def main(src_dir, out_dir):
         a = EXIT_ALPHA.get(i, 1.0)
         rep = {}
         for card, spec in TL.get(i, {}).items():
-            region, pm, al, L = render_card(card, spec)
+            region, pm, al, L = render_card(card, spec, i)
             rx0, ry0, rx1, ry1 = region
             if rx0 < 0 or ry0 < 0 or rx1 >= W0 or ry1 >= H0:
                 # card oltre il bordo del banner: compone su tela estesa e ritaglia

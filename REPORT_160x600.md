@@ -11,6 +11,32 @@ Declinazione del 300×600 approvato (v3), con le stesse regole, gli stessi asset
 | Confronto affiancato originale / corretto | `10_qa/160x600/confronto_originale_vs_corretto.mp4` |
 | Tavole QA | `10_qa/160x600/01…05_*.png`; misure in `10_qa/160x600/qa_report.json` |
 
+## Conteggio degli importi ripristinato (v4)
+
+Il conteggio progressivo dell'originale era stato tolto per errore. L'istruzione di togliere le oscillazioni
+riguardava solo il rimbalzo di scala (il pulse), non il conteggio. Ora è ripristinato con **gli stessi valori
+e lo stesso timing dell'originale**, fotogramma per fotogramma, alla nuova dimensione uniforme delle cifre.
+Il conteggio finisce sempre **prima** che parta il pulse.
+
+| Operatore | Sequenza originale (un valore per frame) |
+|---|---|
+| William Hill | f52 20 · 32 · 56 · 76 · 90 · 96 · f58 102 → 105 da f59 |
+| bet365 | f73 900 · 875 · 824 · 738 · 695 · 615 · 550 · f80 525 → 500 da f81 |
+| SNAI | f100 300 · 642 · 784 · 1.100 · 1.350 · f105 1.425 → 2.000 da f106 (pulse da f116) |
+
+- **Font:** gli asset forniti contengono solo 0, 1, 2, 5, il punto e €; le cifre 3, 4, 6, 7, 8 e 9 non ci
+  sono. Ogni valore intermedio è quindi **ritagliato dal fotogramma originale** in cui compare (stesso font
+  e stessa spaziatura del video), portato all'altezza uniforme nuova (sempre in riduzione o a parità, mai
+  ingrandito) e centrato sulla posizione del valore finale, come nell'originale. "FINO A" resta fermo.
+  Nei frame in dissolvenza la posizione del numero è presa dal frame leggibile vicino.
+- **Differenza di stile nel passaggio al valore finale:** il valore finale è l'asset pulito fornito, un
+  po' più grassetto e più inclinato del font del video. Nel passaggio dall'ultimo valore intermedio al
+  finale la differenza è percepibile. Se fornite le cifre 0–9 nello stile dell'asset pulito, ricompongo i
+  valori intermedi con quelle.
+- **Tutto il resto invariato:** fuori dai frame del conteggio il master è identico bit per bit alla
+  versione già consegnata (verificato frame per frame).
+- **Tavola:** `06_conteggio_ripristinato.png`, originale sopra, MP4 corretto sotto.
+
 ## Differenze di timeline rispetto al 300×600
 
 Le ho misurate su questo master:
@@ -54,7 +80,7 @@ Le altezze sono l'ingombro dell'inchiostro in px, bordi antialias inclusi dal 30
   stati controllati a vista.
 - **Pulse SNAI rimosso:** la zona coperta dalla card ingrandita è riempita con i pixel originali dei
   frame di riposo 115 e 127 (sfondo nero statico). Non ci sono cuciture, verificato con luminosità ×6.
-- **Importi:** compaiono subito al valore finale, con le stesse dissolvenze d'ingresso dell'originale.
+- **Importi:** conteggio originale ripristinato (v4), con le stesse dissolvenze d'ingresso dell'originale.
 - **Card ferme:** differenza massima 0 tra frame consecutivi dopo l'ingresso, per tutte le card.
 - **Regressione:** il 300×600 rigenerato con il nuovo codice parametrico risulta identico bit per bit
   a quello consegnato.
