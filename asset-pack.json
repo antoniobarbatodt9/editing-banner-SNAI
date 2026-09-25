@@ -150,7 +150,7 @@
    "master_lossless": "09_rebuild_master/SNAI_BonusSport_300x50_CORRETTO_master_lossless_rgb.mkv",
    "distribuzione": "11_distribuzione/SNAI_BonusSport_300x50_CORRETTO.mp4",
    "sha256_distribuzione": "98a80d8d92c7627be07ba7e4c10bdf576537944e804e5185c17fc86fb547e03d",
-   "stato": "in attesa di approvazione",
+   "stato": "approvato",
    "note": "layout orizzontale; card opache; FINO A lettera per lettera; card SNAI senza pulse (f120-122, f125-127 interpolati)"
   }
  },
@@ -290,5 +290,16 @@
   "160x600: timeline in scripts/formats/f160x600.py; FORMAT=160x600 per compose/qa/encode.",
   "v4: conteggio degli importi ripristinato in 300x600, 160x600 e 320x480 (stessi valori e timing dell'originale).",
   "v5 (solo 320x480): eliminato il pulse della card SNAI; sfondo di 6 frame interpolato tra frame reali, dichiarato."
- ]
+ ],
+ "casino": {
+  "320x480": {
+   "master": "00_master_approvato/casino/SNAI_BonusCasino_320x480_MASTER.mp4",
+   "master_sha256": "dbcc92a712527cdbf05f8041afa500a763708fbffcfeb555e952ff4182314a1d",
+   "master_lossless": "09_rebuild_master/casino/SNAI_BonusCasino_320x480_CORRETTO_master_lossless_rgb.mkv",
+   "distribuzione": "11_distribuzione/casino/SNAI_BonusCasino_320x480_CORRETTO.mp4",
+   "sha256_distribuzione": "4022efb410ebf5984f816e559f434452d9d350d91c463c3cde6015afb3aa9a6a",
+   "stato": "campione in attesa di approvazione",
+   "note": "clean plate da frame reali; misura unica 19/11/44; logo NetBet ufficiale (master compresso 11%); pulse SNAI f145-156 eliminato"
+  }
+ }
 }
