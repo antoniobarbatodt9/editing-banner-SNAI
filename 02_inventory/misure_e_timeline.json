@@ -1,0 +1,42 @@
+{
+  "sorgente": {
+    "file": "00_master_approvato/SNAI_BonusSport_300x600_originale.mp4",
+    "sha256": "b96fcfee011c4173e61c94e42e8e18bb998d2313c130b9a7f7e8f4fe33a5aa98",
+    "codec": "h264 High, yuvj420p, bt709", "size": [300, 600], "fps": 15, "frames": 135,
+    "durata_s": 9.0, "bitrate_kbps": 1181, "audio": false
+  },
+  "nota_coordinate": "px nel canvas 300x600, origine in alto a sinistra, frame numerati da 1 (t = (n-1)/15 s)",
+  "timeline": [
+    {"frames": "1-40",   "contenuto": "intro BONUS SPORT, flash, calciatore, pallone"},
+    {"frames": "42-49",  "contenuto": "WH solo, fade-in card, contatore 68-92-100-105"},
+    {"frames": "50-51",  "contenuto": "WH scende per fare spazio"},
+    {"frames": "52-62",  "contenuto": "+bet365, fade-in, contatore 900-760-648-500 (parte sopra il valore finale)"},
+    {"frames": "63-64",  "contenuto": "reflow: bet365/WH si rimpiccioliscono e salgono"},
+    {"frames": "65-76",  "contenuto": "+SNAI, fade-in a dimensione finale, contatore 300-...-1.500"},
+    {"frames": "82-92",  "contenuto": "PULSE card SNAI: 1.27x (f84) -> 0.85x (f87) -> 1.0 (f88) -> 1.1x (f89-91) -> 1.0 (f93)"},
+    {"frames": "93-123", "contenuto": "riposo tre card"},
+    {"frames": "124-127","contenuto": "uscita card/fade a nero"}
+  ],
+  "riposo_f100_attuale": {
+    "bet365": {"card_wh": [124, 119], "card_box": [88, 80, 211, 198], "logo_h": 22, "logo_w": 96, "fino_a_h": 11, "importo_h": 40, "importo_w": 106},
+    "snai":   {"card_wh": [169, 149], "card_box": [66, 210, 234, 358], "logo_h": 29, "logo_w": 123, "fino_a_h": 14, "importo_h": 40, "importo_w": 145},
+    "wh":     {"card_wh": [126, 107], "card_box": [87, 380, 212, 486], "logo_h": 20, "logo_w": 106, "fino_a_h": 10, "importo_h": 38, "importo_w": 98},
+    "gap_card": {"bet365_snai": 11, "snai_wh": 21},
+    "titolo_y": [20, 57], "cta_box": [64, 512, 235, 541],
+    "card_fill_rgb": [5, 6, 10], "card_bordo_rgb_picco": [40, 41, 45]
+  },
+  "fase2_f060_attuale": {
+    "card_wh": [165, 148],
+    "bet365": {"logo_h": 31, "fino_a_h": 14, "importo_h": 51},
+    "wh":     {"logo_h": 25, "fino_a_piu_importo_h": 67}
+  },
+  "fase1_f048_attuale": {"wh": {"logo_h": 25, "fino_a_piu_importo_h": 66}},
+  "target_proposto_fase3": {
+    "logo_h": 21, "fino_a_h": 10, "importo_h": 39,
+    "card_wh": [169, 118], "gap": 16,
+    "card_box": {"bet365": [66, 92, 234, 209], "snai": [66, 226, 234, 343], "wh": [66, 360, 234, 477]},
+    "centro_gruppo_y": 284.5, "centro_area_titolo_cta_y": 284.5,
+    "scala_logo": {"bet365": 0.955, "snai": 0.724, "wh": 1.05},
+    "area_da_rivelare_nella_vecchia_card_SNAI": [[66, 210, 234, 225], [66, 344, 234, 358]]
+  }
+}
