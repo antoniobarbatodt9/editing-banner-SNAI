@@ -8,7 +8,14 @@
 | Master lossless RGB | `09_rebuild_master/casino/SNAI_BonusCasino_320x480_CORRETTO_master_lossless_rgb.mkv` |
 | Distribuzione | `11_distribuzione/casino/SNAI_BonusCasino_320x480_CORRETTO.mp4`: **1,56 MB** (originale 1,66 MB), H.264 High, 320×480, 15 fps, 14,00 s, senza audio, stessi tag colore |
 | Confronto affiancato | `10_qa/casino_320x480/confronto_originale_vs_corretto.mp4` |
-| Tavole QA | `10_qa/casino_320x480/01…06_*.png`; misure in `qa_report.json` |
+| Tavole QA | `10_qa/casino_320x480/01…07_*.png`; misure in `qa_report.json` |
+
+**Modifica della v2:** l'importo SNAI 5.000€ è ora il nuovo asset singolo caricato su `main` (commit `1f308d3`, `CASINO/…/text_5000.png`). Ho cambiato solo quella cifra.
+- L'altezza resta **44 px**. Il nuovo asset ha proporzioni diverse: a 44 px è largo **169 px** invece di 152 px, quasi come il 2.000€ (167 px). L'arancio resta quello campionato dal master, (250,108,7).
+- Il blocco SNAI resta centrato come prima e allineato a sinistra sull'importo. Con la cifra più larga, logo e "FINO A" si spostano di circa 9 px a sinistra. Ora i tre importi finiscono allo stesso bordo destro (x 243).
+- Nell'assestamento f130–133 la scala di partenza è ricalcolata (284 px al f129 ÷ 170,4 = 1,667), così il passaggio dal conteggio originale resta identico.
+- **Frame cambiati rispetto alla v1:** solo f130–133 e f135–210 (le righe 147–241, cioè il blocco SNAI). Tutti gli altri frame sono identici bit per bit alla v1. Riposo fermo (differenza 0 tra frame consecutivi); CTA e disclaimer identici all'originale (differenza 0).
+- Tavola nuova: `07_zoom_nuovo_5000_f160.png` (3×; dall'alto: originale, v1, v2 MP4).
 
 ## Timeline del master (misurata frame per frame)
 

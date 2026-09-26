@@ -27,7 +27,7 @@ LOGO_FIX = [dict(op='netbet', frames=range(74, 110), old=(64, 205, 171, 226), ne
 REARRANGE = {111: 0.12, 112: 0.24, 113: 0.53, 114: 0.80, 115: 0.92, 116: 1.0}
 SNAI_COUNT_FRAMES = range(116, 130)
 SNAI_COUNT_ROWS = (108, 275)
-SNAI_COUNT_AMT = (159.5, 217.5, 1.873)          # importo del conteggio a f129: centro e scala rispetto al riposo nuovo
+SNAI_COUNT_AMT = (159.5, 217.5, 1.667)          # importo del conteggio a f129 (284 px): centro e scala rispetto al riposo nuovo (asset 5.000 v2, 170,4 px)
 SNAI_REVEAL = {130: (0.27, 0.22, 0.66), 131: (0.43, 0.43, 0.88), 132: (0.78, 0.73, 1.0), 133: (1.0, 1.0, 1.0)}
 GLITCH_NO_SNAI = {134}
 REST = (135, 187)
