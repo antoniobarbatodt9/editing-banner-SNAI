@@ -297,9 +297,9 @@
    "master_sha256": "dbcc92a712527cdbf05f8041afa500a763708fbffcfeb555e952ff4182314a1d",
    "master_lossless": "09_rebuild_master/casino/SNAI_BonusCasino_320x480_CORRETTO_master_lossless_rgb.mkv",
    "distribuzione": "11_distribuzione/casino/SNAI_BonusCasino_320x480_CORRETTO.mp4",
-   "sha256_distribuzione": "44c58230d6c145efc83bdf0a23f6c63a1b671fb44b464408826f1fe192d2dfe2",
-   "stato": "v2: nuovo asset 5.000 (main 1f308d3), in attesa di conferma",
-   "note": "clean plate da frame reali; misura unica 19/11/44; logo NetBet ufficiale (master compresso 11%); pulse SNAI f145-156 eliminato; v2: importo SNAI dal nuovo text_5000.png (commit 1f308d3), scala conteggio f130-133 ricalcolata (1,667)"
+   "sha256_distribuzione": "60ad69d4abd5d6a9d6247ffa0ff174cf2dd754ed99489b078f0a8eef36ab1e37",
+   "stato": "v3: asset 5.000 aggiornato (main 199cf3d), in attesa di conferma",
+   "note": "clean plate da frame reali; misura unica 19/11/44; logo NetBet ufficiale (master compresso 11%); pulse SNAI f145-156 eliminato; v3: importo SNAI dal text_5000.png di main 199cf3d, scala conteggio f130-133 ricalcolata (1,617)"
   }
  }
 }
